@@ -91,9 +91,6 @@ DATABASES = {
         'USER': cfg.myUsername,
         'PASSWORD': cfg.myPassword,
         },
-#        'USER': 'fabio',
-#        'PASSWORD': 'hugdnr',
-#        },
     'argentina': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'OPTIONS': {
@@ -105,9 +102,6 @@ DATABASES = {
         'USER': cfg.myUsername,
         'PASSWORD': cfg.myPassword,
         }
-#        'USER': 'fabio',
-#        'PASSWORD': 'hugdnr',
-#        }
 }
 
 DATABASE_ROUTERS = ['Visualization.router.gd_admin_db',]
