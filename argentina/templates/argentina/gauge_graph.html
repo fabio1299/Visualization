@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% if library == "bokeh" %}
+  {% block header %}
+      <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.15.min.css" rel="stylesheet" type="text/css">
+      <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.15.min.css" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.15.min.css" type="text/css" />
+  {% endblock %}
+  {%  block script %}
+      <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.15.min.js"></script>
+      <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.15.min.js"></script>
+      <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.15.min.js"></script>
+  {% endblock %}
+{% endif %}
+
+{% block content %}
+    <h3>Station: {{station.station_name}} ({{code}})</h3>
+     <a href="{{ station.get_download_url }}">Download data (Excel file)</a>
+    {% if library == "plotly" %}
+        {% include "argentina/plotly.html" %}
+    {%  elif library == "bokeh" %}
+        {% include "argentina/bokeh.html" %}
+    {%  endif %}
+{% endblock %}

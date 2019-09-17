@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h3>Argentina - Hydrological Stations</h3>
+    Subset of data from <a href="http://bdhi.hidricosargentina.gob.ar/">Base de Datos Hidrológica Integrada</a>
+    <p></p>
+    <ul class="sidebar-nav">
+        <li>{{ num_stations }} <strong>stations</strong> </li>
+        <li>on {{ num_rivers }} <strong>rivers</strong></li>
+        <li>in {{ num_provinces }} <strong>provinces</strong></li>
+    </ul>
+    <div style="width:600;height:500">
+    {% if graphs %}
+        {% for graph in graphs %}
+            {{ graph|safe }}
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}

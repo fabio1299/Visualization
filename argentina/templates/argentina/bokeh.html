@@ -1,0 +1,11 @@
+<div style="width:600;height:500">
+{% if graphs %}
+    {% for graph in graphs %}
+    {{ graph.div | safe }}
+    {% block footer %}
+        {{ graph.script | safe }}
+    {% endblock %}
+    {% endfor %}
+{% endif %}
+
+</div>

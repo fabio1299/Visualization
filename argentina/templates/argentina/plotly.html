@@ -1,0 +1,8 @@
+<div style="width:600;height:500">
+{% if graphs %}
+    {% for graph in graphs %}
+        {{ graph|safe }}
+    {% endfor %}
+{% endif %}
+
+</div>

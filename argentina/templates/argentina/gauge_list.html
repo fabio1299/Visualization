@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+{% block sidebar %}
+
+      {% if gauge_list %}
+            <select id="selectcode">
+                  <option value="" selected>Select a Station code</option>
+                {% for gauge in gauge_list %}
+                    <option value="{{ gauge.get_absolute_url }}">{{ gauge.code }} ({{gauge.station_name}})</option>
+                {% endfor %}
+            </select>
+      {% else %}
+        <p>There are no stations in the database.</p>
+      {% endif %}
+{% endblock %}
+{% block content %}
+    <div id="argentina">
+        {% include "argentina/leaflet.html" %}
+    </div>
+{% endblock %}
+{% block footer %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+    $(function(){
+      // bind change event to select
+      $('#selectcode').on('change', function () {
+          var url = $(this).val(); // get selected value
+          if (url) { // require a URL
+              window.location = url; // redirect
+          }
+          return false;
+      });
+    });
+</script>
+{% endblock %}
