@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 import importlib.util
-spec = importlib.util.spec_from_file_location("config", "/Users/ecr/fabio/MyConfig/config.py")
+spec = importlib.util.spec_from_file_location("config", "/Users/ecr/danielv/Visualization/config.py")
 cfg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cfg)
 
