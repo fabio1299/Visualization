@@ -44,7 +44,7 @@ def TimeseriesAllModels(dfDischarge,code,name):
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
                         marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
 #    layout = go.Layout(title="Discharge timeseries",
 #                       xaxis={'title': 'Years, Months',
 #                              'range':[datetime(year=1900,month=1,day=1), maxTime]},
@@ -107,7 +107,7 @@ def TimeseriesAnnualAllModels(dfInput,code,name):
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
                         marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
 #    layout = go.Layout(title="Discharge timeseries",
 #                       xaxis={'title': 'Years, Months',
 #                              'range':[datetime(year=1900,month=1,day=1), maxTime]},
@@ -172,7 +172,7 @@ def TimeseriesMonthlyAllModels(dfInput,code,name):
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
                         marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
     layout = go.Layout(title="Discharge - monthly averages",
                        xaxis={'ticktext':labels,
                               'tickvals':tickvals},
@@ -211,7 +211,7 @@ def BoxplotMonthlyAllModels(dfInput,code,name):
     trace5 = go.Box(y=dfDischarge.index.month, x=dfDischarge['gpccv7'],
                         marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         orientation= 'h',boxpoints = False, name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
     layout = go.Layout(title="Discharge - monthly averages",
                        yaxis={'ticktext':labels,
                               'tickvals':tickvals},
@@ -250,7 +250,7 @@ def ObsVsModeled(dfDischarge,model,code,name):
 
     table_trace1=StasData(dfDischarge[[model,'obs']])
 
-    data = go.Data([table_trace1,trace2,trace1])
+    data = [table_trace1,trace2,trace1]
     layout = go.Layout(title='Observed vs {}'.format(models[model][0]),
                        #xaxis={'title': 'Observed<br><small>m3/s</small>','range':[0, maxDischarge],'domain':[0,0.50], 'anchor':'y','showticklabels':False},
                        #yaxis={'title': models[model][1] + '<br><small>m3/s</small>','range':[0, maxDischarge],'scaleanchor':'x'},
@@ -261,7 +261,7 @@ def ObsVsModeled(dfDischarge,model,code,name):
                        showlegend=False
                        )
     figure = go.Figure(data=data, layout=layout)
-    #figure['data'].extend(go.Data([trace1, trace2]))
+    #figure['data'].extend([trace1, trace2])
     #figure.layout(layout)
     div = opy.plot(figure, auto_open=False, output_type='div', config=config)
 
@@ -392,14 +392,14 @@ def ModPerformance(dfData):
                    fill=dict(color='#F5F8FF'),
                    align=['left'] * 5))
 
-    data = go.Data([trace])
+    data = [trace]
     layout = go.Layout(title='Models performance',
                        height=400,
                        width=400,
                        showlegend=False
                        )
     figure = dict(data=data, layout=layout)
-    #figure['data'].extend(go.Data([trace1, trace2]))
+    #figure['data'].extend([trace1, trace2])
     #figure.layout(layout)
 
     div = opy.plot(figure, auto_open=False, output_type='div', config=config)
