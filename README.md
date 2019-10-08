@@ -3,13 +3,9 @@
 
 ## Project Environment
 
-This project uses the Anaconda package manager. The package info is located in `environment.yml`.
+This project uses the Anaconda package manager with the conda-forge channel. The package info is located in `requirements.txt`.
 
-An explicit environment (linux-64) definition is located in `spec-file.txt`.
-
-`conda create --name myenv --file  spec-file.txt`
-
-`conda create --name myenv --file  environment.yml`
+`conda create --name myenv --file  requirements.txt`
 
 ## Settings
 
