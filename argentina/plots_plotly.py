@@ -30,21 +30,21 @@ def TimeseriesAllModels(dfDischarge,code,name):
 
     maxTime=dfDischarge.index.max()
 
-    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': "1"},
+    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': 1},
                         mode='lines', name='Observed')
     trace2 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_ro'],
-                        marker={'color': 'blue', 'symbol': 103, 'size': "1"},
+                        marker={'color': 'blue', 'symbol': 103, 'size': 1},
                         mode='lines', name='TerraClimate (runoff accumulation)')
     trace3 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_wbm'],
-                        marker={'color': 'green', 'symbol': 102, 'size': "1"},
+                        marker={'color': 'green', 'symbol': 102, 'size': 1},
                         mode='lines', name='TerraClimate (WBM model)')
     trace4 = go.Scatter(x=dfDischarge.index, y=dfDischarge['crutsv401'],
-                        marker={'color': 'yellow', 'symbol': 101, 'size': "1"},
+                        marker={'color': 'yellow', 'symbol': 101, 'size': 1},
                         mode='lines', name='CRU TS Ver. 4.01')
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
-                        marker={'color': 'cyan', 'symbol': 100, 'size': "1"},
+                        marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
 #    layout = go.Layout(title="Discharge timeseries",
 #                       xaxis={'title': 'Years, Months',
 #                              'range':[datetime(year=1900,month=1,day=1), maxTime]},
@@ -93,21 +93,21 @@ def TimeseriesAnnualAllModels(dfInput,code,name):
 
 
 
-    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': "1"},
+    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': 1},
                         mode='lines', name='Observed')
     trace2 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_ro'],
-                        marker={'color': 'blue', 'symbol': 103, 'size': "1"},
+                        marker={'color': 'blue', 'symbol': 103, 'size': 1},
                         mode='lines', name='TerraClimate (runoff accumulation)')
     trace3 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_wbm'],
-                        marker={'color': 'green', 'symbol': 102, 'size': "1"},
+                        marker={'color': 'green', 'symbol': 102, 'size': 1},
                         mode='lines', name='TerraClimate (WBM model)')
     trace4 = go.Scatter(x=dfDischarge.index, y=dfDischarge['crutsv401'],
-                        marker={'color': 'yellow', 'symbol': 101, 'size': "1"},
+                        marker={'color': 'yellow', 'symbol': 101, 'size': 1},
                         mode='lines', name='CRU TS Ver. 4.01')
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
-                        marker={'color': 'cyan', 'symbol': 100, 'size': "1"},
+                        marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
 #    layout = go.Layout(title="Discharge timeseries",
 #                       xaxis={'title': 'Years, Months',
 #                              'range':[datetime(year=1900,month=1,day=1), maxTime]},
@@ -158,21 +158,21 @@ def TimeseriesMonthlyAllModels(dfInput,code,name):
 
     maxTime=dfDischarge.index.max()
 
-    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': "1"},
+    trace1 = go.Scatter(x=dfDischarge.index, y=dfDischarge['obs'], marker={'color': 'red', 'symbol': 104, 'size': 1},
                         mode='lines', name='Observed')
     trace2 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_ro'],
-                        marker={'color': 'blue', 'symbol': 103, 'size': "1"},
+                        marker={'color': 'blue', 'symbol': 103, 'size': 1},
                         mode='lines', name='TerraClimate (runoff accumulation)')
     trace3 = go.Scatter(x=dfDischarge.index, y=dfDischarge['terraclimate_wbm'],
-                        marker={'color': 'green', 'symbol': 102, 'size': "1"},
+                        marker={'color': 'green', 'symbol': 102, 'size': 1},
                         mode='lines', name='TerraClimate (WBM model)')
     trace4 = go.Scatter(x=dfDischarge.index, y=dfDischarge['crutsv401'],
-                        marker={'color': 'yellow', 'symbol': 101, 'size': "1"},
+                        marker={'color': 'yellow', 'symbol': 101, 'size': 1},
                         mode='lines', name='CRU TS Ver. 4.01')
     trace5 = go.Scatter(x=dfDischarge.index, y=dfDischarge['gpccv7'],
-                        marker={'color': 'cyan', 'symbol': 100, 'size': "1"},
+                        marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         mode='lines', name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
     layout = go.Layout(title="Discharge - monthly averages",
                        xaxis={'ticktext':labels,
                               'tickvals':tickvals},
@@ -197,21 +197,21 @@ def BoxplotMonthlyAllModels(dfInput,code,name):
     maxTime=dfDischarge.index.max()
 
     trace1 = go.Box(y=dfDischarge.index.month, x=dfDischarge['obs'],
-                        marker={'color': 'red', 'symbol': 104, 'size': "1"},
+                        marker={'color': 'red', 'symbol': 104, 'size': 1},
                         orientation= 'h',boxpoints = False, name='Observed')
     trace2 = go.Box(y=dfDischarge.index.month, x=dfDischarge['terraclimate_ro'],
-                        marker={'color': 'blue', 'symbol': 103, 'size': "1"},
+                        marker={'color': 'blue', 'symbol': 103, 'size': 1},
                         orientation= 'h',boxpoints = False, name='TerraClimate (runoff accumulation)')
     trace3 = go.Box(y=dfDischarge.index.month, x=dfDischarge['terraclimate_wbm'],
-                        marker={'color': 'green', 'symbol': 102, 'size': "1"},
+                        marker={'color': 'green', 'symbol': 102, 'size': 1},
                         orientation= 'h',boxpoints = False, name='TerraClimate (WBM model)')
     trace4 = go.Box(y=dfDischarge.index.month, x=dfDischarge['crutsv401'],
-                        marker={'color': 'yellow', 'symbol': 101, 'size': "1"},
+                        marker={'color': 'yellow', 'symbol': 101, 'size': 1},
                         orientation= 'h',boxpoints = False, name='CRU TS Ver. 4.01')
     trace5 = go.Box(y=dfDischarge.index.month, x=dfDischarge['gpccv7'],
-                        marker={'color': 'cyan', 'symbol': 100, 'size': "1"},
+                        marker={'color': 'cyan', 'symbol': 100, 'size': 1},
                         orientation= 'h',boxpoints = False, name='GPCC Ver. 7')
-    data = go.Data([trace1, trace5, trace4, trace2, trace3])
+    data = [trace1, trace5, trace4, trace2, trace3]
     layout = go.Layout(title="Discharge - monthly averages",
                        yaxis={'ticktext':labels,
                               'tickvals':tickvals},
@@ -236,7 +236,7 @@ def ObsVsModeled(dfDischarge,model,code,name):
 
     trace1 = go.Scatter(x=dfDischarge['obs'], y=dfDischarge[model],
                         text=dfDischarge.index,
-                        marker={'color': 'red', 'symbol': 104, 'size': "5"},
+                        marker={'color': 'red', 'symbol': 104, 'size': 5},
                         mode='markers',
                         name='Observed vs {}'.format(models[model][0])
                         )
@@ -250,7 +250,7 @@ def ObsVsModeled(dfDischarge,model,code,name):
 
     table_trace1=StasData(dfDischarge[[model,'obs']])
 
-    data = go.Data([table_trace1,trace2,trace1])
+    data = [table_trace1,trace2,trace1]
     layout = go.Layout(title='Observed vs {}'.format(models[model][0]),
                        #xaxis={'title': 'Observed<br><small>m3/s</small>','range':[0, maxDischarge],'domain':[0,0.50], 'anchor':'y','showticklabels':False},
                        #yaxis={'title': models[model][1] + '<br><small>m3/s</small>','range':[0, maxDischarge],'scaleanchor':'x'},
@@ -261,7 +261,7 @@ def ObsVsModeled(dfDischarge,model,code,name):
                        showlegend=False
                        )
     figure = go.Figure(data=data, layout=layout)
-    #figure['data'].extend(go.Data([trace1, trace2]))
+    #figure['data'].extend([trace1, trace2])
     #figure.layout(layout)
     div = opy.plot(figure, auto_open=False, output_type='div', config=config)
 
@@ -392,14 +392,14 @@ def ModPerformance(dfData):
                    fill=dict(color='#F5F8FF'),
                    align=['left'] * 5))
 
-    data = go.Data([trace])
+    data = [trace]
     layout = go.Layout(title='Models performance',
                        height=400,
                        width=400,
                        showlegend=False
                        )
     figure = dict(data=data, layout=layout)
-    #figure['data'].extend(go.Data([trace1, trace2]))
+    #figure['data'].extend([trace1, trace2])
     #figure.layout(layout)
 
     div = opy.plot(figure, auto_open=False, output_type='div', config=config)

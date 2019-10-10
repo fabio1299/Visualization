@@ -9,31 +9,23 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
-
 import os
-import importlib.util
-spec = importlib.util.spec_from_file_location("config", "/Users/ecr/fabio/MyConfig/config.py")
-cfg = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(cfg)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3u&2w@=m&qg(=)0br0v#azaf^0e6v4zc7z7_@6ga%jrab_5955'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', "True") == "True"
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,37 +70,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Visualization.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'HOST': '10.16.12.60',
-        'PORT': '5434',
+        'HOST': os.environ.get('DB_HOST', None),
+        'PORT': os.environ.get('DB_PORT', None),
         'NAME': 'visualization',
-        'USER': cfg.myUsername,
-        'PASSWORD': cfg.myPassword,
-        },
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD','')
+    },
     'argentina': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'OPTIONS': {
             'options': '-c search_path="public"'
         },
         'NAME': 'argentina',
-        'HOST': '10.16.12.60',
-        'PORT': '5434',
-        'USER': cfg.myUsername,
-        'PASSWORD': cfg.myPassword,
-        }
+        'HOST': os.environ.get('DB_HOST', None),
+        'PORT': os.environ.get('DB_PORT', None),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD','')
+    }
 }
 
-DATABASE_ROUTERS = ['Visualization.router.gd_admin_db',]
+DATABASE_ROUTERS = ['Visualization.router.gd_admin_db', ]
 
 SERIALIZATION_MODULES = {
-     "geojson": "django.contrib.gis.serializers.geojson",
-    }
+    "geojson": "django.contrib.gis.serializers.geojson",
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
@@ -128,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 
@@ -142,17 +132,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
 
 LEAFLET_CONFIG = {
-  'DEFAULT_CENTER': (-35.38,-65.18),
-  'DEFAULT_ZOOM': 5,
-  'MIN_ZOOM': 1,
-  'MAX_ZOOM': 20,
-  'SCALE': 'metric',
-  'RESET_VIEW':False
+    'DEFAULT_CENTER': (-35.38, -65.18),
+    'DEFAULT_ZOOM': 5,
+    'MIN_ZOOM': 1,
+    'MAX_ZOOM': 20,
+    'SCALE': 'metric',
+    'RESET_VIEW': False
 }
