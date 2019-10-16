@@ -86,9 +86,9 @@ DATABASES = {
     'argentina': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'OPTIONS': {
-            'options': '-c search_path="public"'
+            'options': '-c search_path="HydroSTN30"'
         },
-        'NAME': 'argentina',
+        'NAME': 'Argentina_01min',
         'HOST': os.environ.get('DB_HOST', None),
         'PORT': os.environ.get('DB_PORT', None),
         'USER': os.environ.get('DB_USER', ''),
