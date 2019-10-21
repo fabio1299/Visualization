@@ -29,3 +29,4 @@ class Subbasin(models.Model):
     class Meta:
         managed = False
         db_table = 'Subbasin'
+        app_label = 'subbasin'
