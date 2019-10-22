@@ -82,18 +82,24 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', None),
         'NAME': 'wbm_viz',
         'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '')
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'TEST': {
+            'DEPENDENCIES': ['argentina'],
+        }
     },
     'argentina': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'OPTIONS': {
-            'options': '-c search_path="HydroSTN30"'
-        },
         'NAME': 'Argentina_01min',
+        'OPTIONS': {
+            'options': '-c search_path=public,HydroSTN30'
+        },
         'HOST': os.environ.get('DB_HOST', None),
         'PORT': os.environ.get('DB_PORT', None),
         'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '')
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'TEST': {
+            'DEPENDENCIES': [],
+        }
     }
 }
 
