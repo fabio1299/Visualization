@@ -2,32 +2,30 @@
 # https://docs.djangoproject.com/en/2.2/topics/db/multi-db/#using-routers
 
 class gd_admin_db:
-    non_app_attribute_tables = ['auth',
-                                'admin',
-                                'contenttypes',
-                                'sessions',
-                                'messages',
-                                'staticfiles',
-                                'migrations',
-                                'world']
 
     def db_for_read(self, model, **hints):
-        if model._meta.app_label in self.non_app_attribute_tables:
+        if model._meta.app_label == 'wbm_viz':
             return 'default'
-        return 'argentina'
+        if model._meta.app_label == 'hydrostn':
+            return 'argentina_01min'
+        return None
 
     def db_for_write(self, model, **hints):
-        if model._meta.app_label in self.non_app_attribute_tables:
+        if model._meta.app_label == 'wbm_viz':
             return 'default'
-        return 'argentina'
+        if model._meta.app_label == 'hydrostn':
+            return 'argentina_01min'
+        return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        if obj1._meta.app_label in self.non_app_attribute_tables or \
-                obj2._meta.app_label in self.non_app_attribute_tables:
+        db_list = ('default', 'argentina_01min')
+        if obj1._state.db in db_list and obj2._state.db in db_list:
             return True
         return None
 
     def allow_migrate(self, db, app_label, **hints):
-        if app_label in self.non_app_attribute_tables:
+        if app_label == 'wbm_viz':
             return db == 'default'
+        if app_label == 'hydrostn':
+            return db == 'argentina_01min'
         return None

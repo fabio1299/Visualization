@@ -1,8 +1,7 @@
 from django.contrib.gis.db import models
 
-# Create your models here.
-class Subbasin(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+class Hydrostn30Subbasin(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
     recordname = models.CharField(db_column='RecordName', max_length=12, blank=True, null=True)  # Field name made lowercase.
     gridvalue = models.IntegerField(db_column='GridValue', blank=True, null=True)  # Field name made lowercase.
     gridarea = models.FloatField(db_column='GridArea', blank=True, null=True)  # Field name made lowercase.
@@ -23,10 +22,9 @@ class Subbasin(models.Model):
     stnmainstemlength = models.FloatField(db_column='STNMainstemLength', blank=True, null=True)  # Field name made lowercase.
     stncatchmentarea = models.FloatField(db_column='STNCatchmentArea', blank=True, null=True)  # Field name made lowercase.
     stninterstationarea = models.FloatField(db_column='STNInterStationArea', blank=True, null=True)  # Field name made lowercase.
-    nextstation = models.IntegerField(db_column='NextStation', blank=True, null=True)  # Field name made lowercase.# This is an auto-generated Django model module.
-    geom = models.PolygonField(db_column="geom",blank=True,null=True)
+    nextstation = models.IntegerField(db_column='NextStation', blank=True, null=True)  # Field name made lowercase.
+    geom = models.GeometryField(srid=0, blank=True, null=True)
 
     class Meta:
-        managed = False
-        app_label = 'subbasin'
+        managed = False  # Created from a view. Don't remove.
         db_table = 'hydrostn30_subbasin'

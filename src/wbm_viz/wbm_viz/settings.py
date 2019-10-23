@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'subbasin.apps.SubbasinConfig'
+    'hydrostn.apps.hydrostnConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -80,14 +81,14 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'HOST': os.environ.get('DB_HOST', None),
         'PORT': os.environ.get('DB_PORT', None),
-        'NAME': 'wbm_viz',
+        'NAME': 'wbm_viz2',
         'USER': os.environ.get('DB_USER', ''),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'TEST': {
-            'DEPENDENCIES': ['argentina'],
+            'DEPENDENCIES': [],
         }
     },
-    'argentina': {
+    'argentina_01min': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Argentina_01min',
         'OPTIONS': {
@@ -100,7 +101,8 @@ DATABASES = {
         'TEST': {
             'DEPENDENCIES': [],
         }
-    }
+    },
+
 }
 
 DATABASE_ROUTERS = ['wbm_viz.router.gd_admin_db', ]
