@@ -34,8 +34,8 @@ class Hydrostn30Subbasin(models.Model):
         with connection.cursor() as cursor:
 
             #This does not work
-            # cursor.execute("SELECT * FROM get_catchment(%s)", (self.id,))
+            cursor.execute("SELECT * FROM get_catchment(%s)", (self.id,))
 
             # This works
             cursor.execute("SELECT * FROM get_proj4_from_srid(%s)", (3857,))
-            return cursor.fetchone()
+            return cursor.fetchall()
