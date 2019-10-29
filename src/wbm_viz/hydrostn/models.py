@@ -1,30 +1,41 @@
 from django.contrib.gis.db import models
+from django.db import connection
 
 class Hydrostn30Subbasin(models.Model):
-    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    recordname = models.CharField(db_column='RecordName', max_length=12, blank=True, null=True)  # Field name made lowercase.
-    gridvalue = models.IntegerField(db_column='GridValue', blank=True, null=True)  # Field name made lowercase.
-    gridarea = models.FloatField(db_column='GridArea', blank=True, null=True)  # Field name made lowercase.
-    gridpercent = models.FloatField(db_column='GridPercent', blank=True, null=True)  # Field name made lowercase.
-    perimeter = models.FloatField(db_column='Perimeter', blank=True, null=True)  # Field name made lowercase.
-    vertexnum = models.IntegerField(db_column='VertexNum', blank=True, null=True)  # Field name made lowercase.
-    basinid = models.IntegerField(db_column='BasinID', blank=True, null=True)  # Field name made lowercase.
-    streamorder = models.IntegerField(db_column='StreamOrder', blank=True, null=True)  # Field name made lowercase.
-    fromxcoord = models.FloatField(db_column='FromXCoord', blank=True, null=True)  # Field name made lowercase.
-    fromycoord = models.FloatField(db_column='FromYCoord', blank=True, null=True)  # Field name made lowercase.
-    toxcoord = models.FloatField(db_column='ToXCoord', blank=True, null=True)  # Field name made lowercase.
-    toycoord = models.FloatField(db_column='ToYCoord', blank=True, null=True)  # Field name made lowercase.
-    cellid = models.IntegerField(db_column='CellID', blank=True, null=True)  # Field name made lowercase.
-    basinname = models.CharField(db_column='BasinName', max_length=32, blank=True, null=True)  # Field name made lowercase.
-    order = models.IntegerField(db_column='Order', blank=True, null=True)  # Field name made lowercase.
-    color = models.IntegerField(db_column='Color', blank=True, null=True)  # Field name made lowercase.
-    numberofcells = models.IntegerField(db_column='NumberOfCells', blank=True, null=True)  # Field name made lowercase.
-    stnmainstemlength = models.FloatField(db_column='STNMainstemLength', blank=True, null=True)  # Field name made lowercase.
-    stncatchmentarea = models.FloatField(db_column='STNCatchmentArea', blank=True, null=True)  # Field name made lowercase.
-    stninterstationarea = models.FloatField(db_column='STNInterStationArea', blank=True, null=True)  # Field name made lowercase.
-    nextstation = models.IntegerField(db_column='NextStation', blank=True, null=True)  # Field name made lowercase.
+    id = models.IntegerField(primary_key=True)
+    record_name = models.CharField(max_length=12, blank=True, null=True)
+    grid_value = models.IntegerField(blank=True, null=True)
+    grid_area = models.FloatField(blank=True, null=True)
+    grid_percent = models.FloatField(blank=True, null=True)
+    perimeter = models.FloatField(blank=True, null=True)
+    vertex_num = models.IntegerField(blank=True, null=True)
+    basin_id = models.IntegerField(blank=True, null=True)
+    stream_order = models.IntegerField(blank=True, null=True)
+    from_x_coord = models.FloatField(blank=True, null=True)
+    from_y_coord = models.FloatField(blank=True, null=True)
+    to_x_coord = models.FloatField(blank=True, null=True)
+    to_y_coord = models.FloatField(blank=True, null=True)
+    cell_id = models.IntegerField(blank=True, null=True)
+    basin_name = models.CharField(max_length=32, blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+    color = models.IntegerField(blank=True, null=True)
+    number_of_cells = models.IntegerField(blank=True, null=True)
+    stn_mainstem_length = models.FloatField(blank=True, null=True)
+    stn_catchment_area = models.FloatField(blank=True, null=True)
+    stn_interstation_area = models.FloatField(blank=True, null=True)
+    next_station = models.IntegerField(blank=True, null=True)
     geom = models.GeometryField(srid=0, blank=True, null=True)
 
     class Meta:
         managed = False  # Created from a view. Don't remove.
         db_table = 'hydrostn30_subbasin'
+
+    def get_catchment(self):
+        with connection.cursor() as cursor:
+
+            #This does not work
+            # cursor.execute("SELECT * FROM get_catchment(%s)", (self.id,))
+
+            # This works
+            cursor.execute("SELECT * FROM get_proj4_from_srid(%s)", (3857,))
+            return cursor.fetchone()
