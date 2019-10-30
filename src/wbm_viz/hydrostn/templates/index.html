@@ -1,7 +1,17 @@
+{% load leaflet_tags %}
 <html>
-# of subbasin rows = {{ count_subbasin }}
-<br>
-{{  subbasin }}
-<br>
-{{  catchment }}
+  <head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+  </head>
+  <body>
+    <h1>Subbasin Catchments</h1>
+    {% leaflet_map "main" callback="main_map_init" %}
+
+    <script type="text/javascript">
+        function main_map_init (map, options) {
+            // Use Leaflet API here
+        }
+    </script>
+  </body>
 </html>
