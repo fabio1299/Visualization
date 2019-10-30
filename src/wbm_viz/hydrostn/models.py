@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.db import connections
+from django.contrib.gis.geos import GEOSGeometry
 
 class Hydrostn30Subbasin(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -32,8 +33,14 @@ class Hydrostn30Subbasin(models.Model):
         app_label = 'hydrostn'
 
     def get_catchment(self):
+        """Return upstream catchment as polygon object"""
         with connections['argentina_01min'].cursor() as cursor:
 
-            cursor.execute("SELECT * FROM public.get_catchment(%s)", (int(self.id),))
+            cursor.callproc('get_catchment', (self.id,))
 
-            return cursor.fetchall()
+            # return from db is in hexadecimal representation
+            hex_wkb = cursor.fetchone()[0]
+
+            # convert to polygon
+            polygon = GEOSGeometry(hex_wkb)
+            return polygon
