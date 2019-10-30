@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-from django.db import connection
+from django.db import connections
 
 class Hydrostn30Subbasin(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -29,13 +29,11 @@ class Hydrostn30Subbasin(models.Model):
     class Meta:
         managed = False  # Created from a view. Don't remove.
         db_table = 'hydrostn30_subbasin'
+        app_label = 'hydrostn'
 
     def get_catchment(self):
-        with connection.cursor() as cursor:
+        with connections['argentina_01min'].cursor() as cursor:
 
-            #This does not work
-            cursor.execute("SELECT * FROM get_catchment(%s)", (self.id,))
+            cursor.execute("SELECT * FROM public.get_catchment(%s)", (int(self.id),))
 
-            # This works
-            cursor.execute("SELECT * FROM get_proj4_from_srid(%s)", (3857,))
             return cursor.fetchall()
