@@ -5,7 +5,7 @@ def index(request):
     count_subbasin = Hydrostn30Subbasin.objects.count()
     subbasin = Hydrostn30Subbasin.objects.filter(id=1).first()
     catchment = subbasin.get_catchment()
-    #catchment = Hydrostn30Subbasin.objects.raw('SELECT * from get_catchment(%s)',[subbasin.id])
+
     context = {
         'count_subbasin': count_subbasin,
         'subbasin': subbasin,

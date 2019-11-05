@@ -43,4 +43,4 @@ class Hydrostn30Subbasin(models.Model):
 
             # convert to polygon
             polygon = GEOSGeometry(hex_wkb)
-            return polygon
+            return polygon.geojson

@@ -3,15 +3,26 @@
   <head>
     {% leaflet_js %}
     {% leaflet_css %}
-  </head>
-  <body>
-    <h1>Subbasin Catchments</h1>
-    {% leaflet_map "main" callback="main_map_init" %}
 
-    <script type="text/javascript">
-        function main_map_init (map, options) {
-            // Use Leaflet API here
+      <style>
+          #map {
+              width: 600px;
+          }
+      </style>
+
+          <script type="text/javascript">
+        function map_init (map, options) {
+            map.setView([-38.4161, -63.6167],3);
+            L.geoJSON({{ catchment|safe }}).addTo(map)
         }
     </script>
+
+  </head>
+  <body>
+  <h1>Subbasin Catchments</h1>
+      <div id="map">
+            {% leaflet_map "main" callback="map_init" %}
+    </div>
+
   </body>
 </html>
