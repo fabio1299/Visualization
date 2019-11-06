@@ -16,14 +16,23 @@
     </style>
 
     <script type="text/javascript">
+        const argentina_coords = [-38.4161, -63.6167]
+
         function subbasin_map_init(map, options) {
-            map.setView([-38.4161, -63.6167], 3);
-            L.geoJSON({{ subbasin.geom.geojson|safe }}).addTo(map)
+            {#map.setView(argentina_coords, 3);#}
+
+            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }})
+
+            subbasin_polygon.addTo(map)
+            map.fitBounds(subbasin_polygon.getBounds())
         }
 
         function catchment_map_init(map, options) {
-            map.setView([-38.4161, -63.6167], 3);
-            L.geoJSON({{ subbasin.get_catchment|safe }}).addTo(map)
+            {#map.setView(argentina_coords, 3);#}
+
+            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }})
+            subbasin_catchment.addTo(map)
+            map.fitBounds(subbasin_catchment.getBounds())
         }
     </script>
 </head>
