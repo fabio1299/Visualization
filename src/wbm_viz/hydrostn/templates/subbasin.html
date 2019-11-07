@@ -47,5 +47,11 @@
         {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
     </div>
 
+    <p>Subbasin Stream Order: {{ subbasin.stream_order }}</p>
+    <p>Subbasin Perimeter: {{ subbasin.perimeter }}</p>
+    <p>Subbasin Area: {{ subbasin.grid_area }}</p>
+    <p>Subbasin Catchment Area: {{ subbasin.stn_catchment_area }}</p>
+    <p></p>
+
 {% endblock %}
 
