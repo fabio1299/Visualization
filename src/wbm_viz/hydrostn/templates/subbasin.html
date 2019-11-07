@@ -11,29 +11,31 @@
 
     <style>
         .map {
-            width: 600px;
+            width: 1000px;
+            height: 1000px;
         }
     </style>
 
     <script type="text/javascript">
+        function polystyle(feature){
+            return {
+                color : 'red'
+            }
+        }
+
         const argentina_coords = [-38.4161, -63.6167]
 
         function subbasin_map_init(map, options) {
             {#map.setView(argentina_coords, 3);#}
 
             const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }})
+            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }},{style: polystyle})
 
-            subbasin_polygon.addTo(map)
-            map.fitBounds(subbasin_polygon.getBounds())
-        }
-
-        function catchment_map_init(map, options) {
-            {#map.setView(argentina_coords, 3);#}
-
-            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }})
             subbasin_catchment.addTo(map)
+            subbasin_polygon.addTo(map)
             map.fitBounds(subbasin_catchment.getBounds())
         }
+
     </script>
 </head>
 <body>
@@ -43,11 +45,6 @@
     <h2>Subbasin</h2>
     <div class="map" id="subbasin_map">
         {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
-    </div>
-
-    <h2>Catchment</h2>
-    <div class="map" id="catchment_map">
-        {% leaflet_map "catchment_map" callback="catchment_map_init" %}
     </div>
 
 {% endblock %}
