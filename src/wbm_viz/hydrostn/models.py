@@ -33,7 +33,7 @@ class Hydrostn30Subbasin(models.Model):
         app_label = 'hydrostn'
 
     def get_catchment(self):
-        """Return upstream catchment as polygon object"""
+        """Return upstream catchment as geojson"""
         with connections['argentina_01min'].cursor() as cursor:
 
             cursor.callproc('get_catchment', (self.id,))

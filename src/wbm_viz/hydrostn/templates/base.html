@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Water Based Model Visualization{% endblock %}</title>
+
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    {% block header %}{% endblock %}
+    {% block style %}{% endblock %}
+    {% block script %}{% endblock %}
+</head>
+
+<body>
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/subbasin/">Subbasins</a></li>
+        </ul>
+        {% endblock %}
+
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>

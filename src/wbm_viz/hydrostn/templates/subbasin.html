@@ -1,29 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Subbasin {{ subbasin.id }}</title>
+{% extends "base.html" %}
+
+    {% block title %} Subbasin {{ subbasin.id }} {% endblock %}
 
     {% load leaflet_tags %}
     {% leaflet_js %}
     {% leaflet_css %}
 
-
+    {% block style %}
     <style>
         .map {
             width: 1000px;
             height: 1000px;
         }
     </style>
+    {% endblock %}
 
+    {% block script %}
     <script type="text/javascript">
+        const argentina_coords = [-38.4161, -63.6167]
+
         function polystyle(feature){
             return {
                 color : 'red'
             }
         }
-
-        const argentina_coords = [-38.4161, -63.6167]
 
         function subbasin_map_init(map, options) {
             {#map.setView(argentina_coords, 3);#}
@@ -37,8 +37,8 @@
         }
 
     </script>
+{% endblock %}
 </head>
-<body>
 
 {% block content %}
 
@@ -48,5 +48,4 @@
     </div>
 
 {% endblock %}
-</body>
-</html>
+
