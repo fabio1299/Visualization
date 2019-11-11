@@ -72,7 +72,7 @@
 </head>
 
 {% block content %}
-        <h2>Subbasin</h2>
+        <h2>Catchment for Subbasin {{ subbasin.id }}</h2>
         <div class="map" id="subbasin_map">
             {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
         </div>

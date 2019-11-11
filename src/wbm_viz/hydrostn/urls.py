@@ -17,6 +17,8 @@ from django.urls import path,re_path
 from hydrostn import views
 
 urlpatterns = [
+
+    path('', views.index),
     # match 1-5 digit hydrostn30_subbasin id
     re_path(r'^subbasin/(?P<subbasin_id>[0-9]{1,5})/$', views.SubbasinView.as_view())
 ]
