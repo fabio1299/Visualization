@@ -9,8 +9,8 @@
     {% block style %}
     <style>
         .map {
-            width: 1000px;
-            height: 1000px;
+            {#width: 1000px;#}
+            {#height: 1000px;#}
         }
     </style>
     {% endblock %}
@@ -19,20 +19,33 @@
     <script type="text/javascript">
         const argentina_coords = [-38.4161, -63.6167]
 
-        function polystyle(feature){
+        function catchment_style(feature){
             return {
-                color : 'red'
+                color : '#00FFFF',
+                opacity : 0.8,
+                fillColor: '#33BBFF',
+                fillOpacity: 0.2
+            }
+        }
+
+        function subbasin_style(feature){
+            return{
+                color : 'red',
+                opacity : 0.8,
+                fillColor: '#3333FF',
+                fillOpacity: 0.5
             }
         }
 
         function subbasin_map_init(map, options) {
             {#map.setView(argentina_coords, 3);#}
 
-            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }})
-            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }},{style: polystyle})
+            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }},{style: subbasin_style})
+            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }},{style: catchment_style})
 
             subbasin_catchment.addTo(map)
             subbasin_polygon.addTo(map)
+            map.fitWorld()
             map.fitBounds(subbasin_catchment.getBounds())
         }
 
