@@ -19,6 +19,7 @@ from hydrostn import views
 urlpatterns = [
 
     path('', views.index),
+    path('subbasin', views.SubbasinMapView.as_view()),
     # match 1-5 digit hydrostn30_subbasin id
-    re_path(r'^subbasin/(?P<subbasin_id>[0-9]{1,5})/$', views.SubbasinView.as_view())
+    re_path(r'^subbasin/(?P<subbasin_id>[0-9]{1,5})/$', views.SubbasinMapView.as_view())
 ]

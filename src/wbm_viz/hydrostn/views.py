@@ -7,12 +7,11 @@ from .models import Hydrostn30Subbasin
 def index(request):
     return render(request, 'home.html')
 
-class SubbasinView(View):
+class SubbasinMapView(View):
 
-    template_name = 'subbasin.html'
+    template_name = 'subbasin_map.html'
 
-
-    def get(self,request,subbasin_id,*args, **kwargs):
+    def get(self, request, subbasin_id=1, *args, **kwargs):
         subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
 
         # polygon styling
