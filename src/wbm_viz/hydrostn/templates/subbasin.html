@@ -9,8 +9,25 @@
     {% block style %}
     <style>
         .map {
-            {#width: 1000px;#}
-            {#height: 1000px;#}
+            height: 800px;
+        }
+
+        #subbasin_legend{
+            border-color: {{ polygon_style.sub_border }};
+            border-style: solid;
+            background-color: {{ polygon_style.sub_fill }};
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+        }
+
+        #catchment_legend{
+            border-color: {{ polygon_style.catch_border }};
+            border-style: solid;
+            background-color: {{ polygon_style.catch_fill }};
+            width: 100px;
+            height: 100px;
+            display: inline-block;
         }
     </style>
     {% endblock %}
@@ -21,19 +38,20 @@
 
         function catchment_style(feature){
             return {
-                color : '#00FFFF',
+
+                color : '{{ polygon_style.catch_border }}',
                 opacity : 0.8,
-                fillColor: '#33BBFF',
+                fillColor: '{{ polygon_style.catch_fill }}',
                 fillOpacity: 0.2
             }
         }
 
         function subbasin_style(feature){
             return{
-                color : 'red',
+                color : '{{ polygon_style.sub_border }}',
                 opacity : 0.8,
-                fillColor: '#3333FF',
-                fillOpacity: 0.5
+                fillColor: '{{ polygon_style.sub_fill }}',
+                fillOpacity: 0.2
             }
         }
 
@@ -54,17 +72,30 @@
 </head>
 
 {% block content %}
+        <h2>Subbasin</h2>
+        <div class="map" id="subbasin_map">
+            {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
+        </div>
 
-    <h2>Subbasin</h2>
-    <div class="map" id="subbasin_map">
-        {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
+    <div class="row">
+        <div class="col-6">
+            <h4>Subbasin</h4>
+            <div id="subbasin_legend"></div>
+            <p>
+                Subbasin Stream Order: {{ subbasin.stream_order }}<br>
+                Subbasin Perimeter: {{ subbasin.perimeter }}<br>
+                Subbasin Area: {{ subbasin.grid_area }}<br>
+            </p>
+        </div>
+        <div class="col-6">
+            <h4>Catchment</h4>
+            <div id="catchment_legend"></div>
+            <p>Subbasin Catchment Area: {{ subbasin.stn_catchment_area }}</p>
+
+        </div>
     </div>
 
-    <p>Subbasin Stream Order: {{ subbasin.stream_order }}</p>
-    <p>Subbasin Perimeter: {{ subbasin.perimeter }}</p>
-    <p>Subbasin Area: {{ subbasin.grid_area }}</p>
-    <p>Subbasin Catchment Area: {{ subbasin.stn_catchment_area }}</p>
-    <p></p>
+
 
 {% endblock %}
 
