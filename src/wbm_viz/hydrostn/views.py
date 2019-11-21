@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.views import View
 from .models import Hydrostn30Subbasin
 
-from .stats import catchment
+from .stats import db_routines, geometry
+
+
 # Create your views here.
 def index(request):
     return render(request, 'home.html')
@@ -15,9 +17,14 @@ class SubbasinMapView(View):
     def get(self, request, subbasin_id=1, *args, **kwargs):
         subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
 
-        catch_table = catchment.get_catchment_table(subbasin)
-        catch_polys = catchment.get_geometrycollection(catch_table)
-        catch_geom = catch_polys.unary_union
+        # call proc to gen table from DB
+        catch_table = db_routines.get_catchment_table(subbasin)
+
+        # collect all subbasin geom
+        catch_collection = geometry.get_geometrycollection(catch_table)
+
+        # union all geom
+        catch_geom = catch_collection.unary_union
 
         # polygon styling
         polygon_style = {
