@@ -59,7 +59,7 @@
             {#map.setView(argentina_coords, 3);#}
 
             const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }},{style: subbasin_style})
-            const subbasin_catchment = L.geoJSON({{ subbasin.get_catchment|safe }},{style: catchment_style})
+            const subbasin_catchment = L.geoJSON({{ catch_geom.geojson |safe }},{style: catchment_style})
 
             subbasin_catchment.addTo(map)
             subbasin_polygon.addTo(map)
