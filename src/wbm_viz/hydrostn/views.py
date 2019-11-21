@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 from .models import Hydrostn30Subbasin
-# Create your views here.
 
+from .stats import catchment
+
+# Create your views here.
 def index(request):
     return render(request, 'home.html')
 
@@ -14,6 +16,9 @@ class SubbasinMapView(View):
     def get(self, request, subbasin_id=1, *args, **kwargs):
         subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
 
+        catch_table = catchment.get_catchment_table(subbasin)
+
+        breakpoint()
         # polygon styling
         polygon_style = {
                             'sub_border': 'red', 'sub_fill': '#3333FF',

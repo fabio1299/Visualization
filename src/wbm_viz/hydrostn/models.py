@@ -32,6 +32,7 @@ class Hydrostn30Subbasin(models.Model):
         db_table = 'hydrostn30_subbasin'
         app_label = 'hydrostn'
 
+    @property
     def get_catchment(self):
         """Return upstream catchment as geojson"""
         with connections['argentina_01min'].cursor() as cursor:
@@ -44,3 +45,6 @@ class Hydrostn30Subbasin(models.Model):
             # convert to polygon
             polygon = GEOSGeometry(hex_wkb)
             return polygon.geojson
+
+
+
