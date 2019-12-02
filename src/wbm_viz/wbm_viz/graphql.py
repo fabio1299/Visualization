@@ -11,10 +11,10 @@ def run_query(query):
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
-def AirTemperature_Subbasin_monthly(schema,sample_id,year=None,month=None):
+def stats_monthly(schema,parameter,unit,sample_id,year=None,month=None):
     query = """
     {
-          %s_AirTemperature_Subbasin_monthly(where: {SampleID: {_eq: %d}, Year: {_eq: %s}, Month: {_eq: %s}},
+          %s_%s_%s_monthly(where: {SampleID: {_eq: %d}, Year: {_eq: %s}, Month: {_eq: %s}},
             order_by: {Year: asc}){
                 Date
                 Month
@@ -28,8 +28,8 @@ def AirTemperature_Subbasin_monthly(schema,sample_id,year=None,month=None):
           }
     }
     
-    """ % (schema, sample_id, year if year else "null", month if month else "null")
+    """ % (schema, parameter,unit,sample_id, year if year else "null", month if month else "null")
     return query
 
-result = run_query(AirTemperature_Subbasin_monthly("TerraClimate",100,1958,12))  # Execute the query
+result = run_query(stats_monthly("TerraClimate","AirTemperature","Subbasin",100,1958,))  # Execute the query
 print(result)
