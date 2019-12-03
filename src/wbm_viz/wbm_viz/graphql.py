@@ -1,5 +1,3 @@
-# An example to get the remaining rate limit using the Github GraphQL API.
-
 import requests
 
 headers = {"Authorization": "Bearer YOUR API KEY"}
@@ -18,7 +16,6 @@ def stats_monthly(schema,parameter,unit,sample_id,year=None,month=None):
             order_by: {Year: asc}){
                 Date
                 Month
-                RecordName
                 SampleID
                 Year
                 ZonalMax
@@ -31,5 +28,8 @@ def stats_monthly(schema,parameter,unit,sample_id,year=None,month=None):
     """ % (schema, parameter,unit,sample_id, year if year else "null", month if month else "null")
     return query
 
-result = run_query(stats_monthly("TerraClimate","AirTemperature","Subbasin",100,1958,))  # Execute the query
-print(result)
+SAMPLE_ID =100
+YEAR = 1977
+print(run_query(stats_monthly("TerraClimate", "AirTemperature", "Subbasin", SAMPLE_ID, YEAR,)))
+print("\nNext Scehma\n")
+print(run_query(stats_monthly("WBMprist_CRUTSv401", "AirTemperature", "Subbasin", SAMPLE_ID, YEAR,)))
