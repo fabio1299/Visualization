@@ -12,6 +12,7 @@ MEASUREMENTS = [
     "SoilMoisture"
 ]
 
+
 def run_query(query):
     request = requests.post('http://localhost:8080/v1/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
@@ -20,10 +21,10 @@ def run_query(query):
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
 
-def stats_monthly(schema,parameter,unit,sample_id,year=None,month=None):
+def stats_monthly(schema, parameter, unit, sample_id, year=None, month=None):
     query = """
           %s_%s_%s_monthly(where: {SampleID: {_eq: %d}, Year: {_eq: %s}, Month: {_eq: %s}},
-            order_by: {Year: asc}){
+            order_by: {Date: asc}){
                 Date
                 Month
                 SampleID
@@ -33,7 +34,7 @@ def stats_monthly(schema,parameter,unit,sample_id,year=None,month=None):
                 ZonalMin
                 ZoneArea
           }
-    """ % (schema, parameter,unit,sample_id, year if year else "null", month if month else "null")
+    """ % (schema, parameter, unit, sample_id, year if year else "null", month if month else "null")
     return query
 
 
@@ -43,17 +44,23 @@ def query_all(*args):
     all_query = "{%s}" % "".join(*args)
     return all_query
 
-def query_model_stats_monthly(schema,unit,sample_id):
+
+def query_model_stats_monthly(schema, unit, sample_id):
     return query_all(
         [stats_monthly(schema, measurement, unit, sample_id) for measurement in MEASUREMENTS]
     )
 
+
 def to_df(table_dict):
+    """Convert Table from database to usable Dataframe"""
     df = pd.DataFrame(table_dict)
+
+    # Date as index
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.set_index('Date')
 
     return df
+
 
 def query_to_df(query_result):
     """Returns dictionary of pandas dataframe corresponding to all querys within query_result"""
@@ -63,8 +70,8 @@ def query_to_df(query_result):
 
 def main():
     result = run_query(
-            query_model_stats_monthly("TerraClimate", "Subbasin", 1)
-        )
+        query_model_stats_monthly("TerraClimate", "Subbasin", 1)
+    )
 
     return result
 

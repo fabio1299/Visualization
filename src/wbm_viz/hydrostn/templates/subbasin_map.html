@@ -58,18 +58,17 @@
         function subbasin_map_init(map, options) {
             {#map.setView(argentina_coords, 3);#}
 
-            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }},{style: subbasin_style})
-            const subbasin_catchment = L.geoJSON({{ catch_geom.geojson |safe }},{style: catchment_style})
+            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }},{style: subbasin_style});
+            const subbasin_catchment = L.geoJSON({{ catch_geom.geojson |safe }},{style: catchment_style});
 
-            subbasin_catchment.addTo(map)
-            subbasin_polygon.addTo(map)
-            map.fitWorld()
-            map.fitBounds(subbasin_catchment.getBounds())
+            subbasin_catchment.addTo(map);
+            subbasin_polygon.addTo(map);
+            map.fitWorld();
+            map.fitBounds(subbasin_catchment.getBounds());
         }
 
     </script>
 {% endblock %}
-</head>
 
 {% block content %}
         <h2>Catchment for Subbasin {{ subbasin.id }}</h2>
@@ -95,7 +94,7 @@
         </div>
     </div>
 
-
+    <a href="{% url 'stats' subbasin.id %}">STATISTICS</a>
 
 {% endblock %}
 

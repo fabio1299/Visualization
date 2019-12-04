@@ -3,8 +3,7 @@ from django.http import HttpResponse
 from django.views import View
 from .models import Hydrostn30Subbasin
 
-from .stats import db_routines, geometry
-
+from . import geometry, db_routines
 
 # Create your views here.
 def index(request):
@@ -25,7 +24,6 @@ class SubbasinMapView(View):
 
         # union all geom
         catch_geom = catch_collection.unary_union
-
         # polygon styling
         polygon_style = {
                             'sub_border': 'red', 'sub_fill': '#3333FF',
@@ -35,3 +33,10 @@ class SubbasinMapView(View):
         context = {'subbasin': subbasin, 'catch_geom': catch_geom, 'polygon_style': polygon_style}
         return render(request, self.template_name, context=context)
 
+class SubbasinStatsView(View):
+    template_name = 'subbasin_stats.html'
+
+    def get(self, request, subbasin_id=1, *args, **kwargs):
+
+
+        return render(request,self.template_name)
