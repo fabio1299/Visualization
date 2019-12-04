@@ -48,13 +48,17 @@ def query_model_stats_monthly(schema,unit,sample_id):
         [stats_monthly(schema, measurement, unit, sample_id) for measurement in MEASUREMENTS]
     )
 
+def to_df(table_dict):
+    df = pd.DataFrame(table_dict)
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.set_index('Date')
+
+    return df
 
 def query_to_df(query_result):
-    '''Returns dictionary of pandas dataframe corresponding to all querys within query_result '''
+    """Returns dictionary of pandas dataframe corresponding to all querys within query_result"""
     querys = query_result['data']
-    return {key: pd.DataFrame(val) for key, val in querys.items()}
-
-
+    return {key: to_df(val) for key, val in querys.items()}
 
 
 def main():
