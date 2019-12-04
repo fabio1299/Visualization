@@ -9,12 +9,17 @@ MEASUREMENTS = [
     "Evapotranspiration",
     "Precipitation",
     "Runoff",
-    "SoilMoisture"
+    "SoilMoisture",
+]
+
+MODELS = [
+    "TerraClimate",
+    "WBMprist_CRUTSv401",
 ]
 
 
 def run_query(query):
-    request = requests.post('http://localhost:8080/v1/graphql', json={'query': query}, headers=headers)
+    request = requests.post('http://10.30.0.22:8080/v1/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
         return request.json()
     else:
@@ -38,17 +43,19 @@ def stats_monthly(schema, parameter, unit, sample_id, year=None, month=None):
     return query
 
 
-def query_all(*args):
+def query_concat(*args):
     """Join one or more graphql queries into. Hasura will execute in parallel, then return together"""
 
     all_query = "{%s}" % "".join(*args)
     return all_query
 
 
-def query_model_stats_monthly(schema, unit, sample_id):
-    return query_all(
-        [stats_monthly(schema, measurement, unit, sample_id) for measurement in MEASUREMENTS]
-    )
+def query_model_stats_monthly(schemas, unit, sample_id):
+    queries = []
+    for schema in schemas:
+        for measurement in MEASUREMENTS:
+            queries.append(stats_monthly(schema, measurement, unit, sample_id))
+    return query_concat(queries)
 
 
 def to_df(table_dict):
