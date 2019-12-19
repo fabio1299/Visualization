@@ -7,12 +7,13 @@
 {% endblock %}
 
 {% block content %}
-    <div id="tester"></div>
-    <div id="tester2"></div>
-    <div id="tester3"></div>
-    <div id="tester4"></div>
 
-    <script src="{% static 'stats.js' %}"></script>
+    <div  id="AirTemperature"></div>
+    <div  id="Evapotranspiration"></div>
+    <div id="Precipitation"></div>
+    <div id="SoilMoisture"></div>
+
+    <script src="{% static 'stats.js' %}" subbasin_id="{{ subbasin_id }}"></script>
 
 {% endblock %}
 
