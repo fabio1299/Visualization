@@ -38,9 +38,9 @@ class SubbasinStatsView(View):
     template_name = 'subbasin_stats.html'
 
     def get(self, request, subbasin_id=1, *args, **kwargs):
-        result = run_query(
-            query_model_stats_monthly(["TerraClimate"], "Subbasin", subbasin_id)
-        )
-        dfs = query_to_df(result)
-        context = {'df_tables': dfs}
-        return render(request,self.template_name, context=context)
+        # result = run_query(
+        #     query_model_stats_monthly(["TerraClimate"], "Subbasin", subbasin_id)
+        # )
+        # dfs = query_to_df(result)
+        # context = {'df_tables': dfs}
+        return render(request,self.template_name)

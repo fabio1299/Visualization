@@ -27,6 +27,11 @@ DEBUG = os.environ.get('DEBUG', "True") == "True"
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+STATIC_URL = '/static/'
 
 # Application definition
 

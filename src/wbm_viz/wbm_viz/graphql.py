@@ -19,7 +19,7 @@ MODELS = [
 
 
 def run_query(query):
-    request = requests.post('http://10.30.0.22:8080/v1/graphql', json={'query': query}, headers=headers)
+    request = requests.post('http://10.16.12.60:42170/v1/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
         return request.json()
     else:

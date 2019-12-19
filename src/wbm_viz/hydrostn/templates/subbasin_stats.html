@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="tester"></div>
+
+    <script src="{% static 'stats.js' %}"></script>
+
+{% endblock %}
+
