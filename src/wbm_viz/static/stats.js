@@ -110,7 +110,8 @@ function baseLayout(title, ylabel = "units") {
         title: title,
         yaxis: {
             title: ylabel
-        }
+        },
+        showlegend: true
 
     }
 
