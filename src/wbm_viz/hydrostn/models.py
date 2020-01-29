@@ -46,5 +46,85 @@ class Hydrostn30Subbasin(models.Model):
             polygon = GEOSGeometry(hex_wkb)
             return polygon.geojson
 
+class CatchmentBasins(models.Model):
+    sample_id = models.IntegerField(primary_key=True)
+    basins = models.TextField(blank=True, null=True)  # This field type is a guess.
+    catchment = models.GeometryField(srid=0, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_basins'
+        app_label = 'hydrostn'
+
+
+class CatchmentStatsAirTemperature(models.Model):
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    model_name = models.TextField(blank=True, null=True)
+    mean_zonal_mean = models.FloatField(blank=True, null=True)
+    mean_zonal_min = models.FloatField(blank=True, null=True)
+    mean_zonal_max = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_stats_air_temperature'
+        app_label = 'hydrostn'
+
+
+class CatchmentStatsEvapotranspiration(models.Model):
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    model_name = models.TextField(blank=True, null=True)
+    mean_zonal_mean = models.FloatField(blank=True, null=True)
+    mean_zonal_min = models.FloatField(blank=True, null=True)
+    mean_zonal_max = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_stats_evapotranspiration'
+        app_label = 'hydrostn'
+
+
+class CatchmentStatsPrecipitation(models.Model):
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    model_name = models.TextField(blank=True, null=True)
+    mean_zonal_mean = models.FloatField(blank=True, null=True)
+    mean_zonal_min = models.FloatField(blank=True, null=True)
+    mean_zonal_max = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_stats_precipitation'
+        app_label = 'hydrostn'
+
+
+class CatchmentStatsRunoff(models.Model):
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    model_name = models.TextField(blank=True, null=True)
+    mean_zonal_mean = models.FloatField(blank=True, null=True)
+    mean_zonal_min = models.FloatField(blank=True, null=True)
+    mean_zonal_max = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_stats_runoff'
+        app_label = 'hydrostn'
+
+class CatchmentStatsSoilMoisture(models.Model):
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    model_name = models.TextField(blank=True, null=True)
+    mean_zonal_mean = models.FloatField(blank=True, null=True)
+    mean_zonal_min = models.FloatField(blank=True, null=True)
+    mean_zonal_max = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'catchment_stats_soil_moisture'
+        app_label = 'hydrostn'
+
+
 
 

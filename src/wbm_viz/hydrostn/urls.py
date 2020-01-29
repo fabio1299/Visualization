@@ -19,6 +19,6 @@ from hydrostn import views
 urlpatterns = [
 
     path('', views.index),
-    path('subbasin/<int:subbasin_id>/', views.SubbasinMapView.as_view(), name='map'),
-    path('subbasin/<int:subbasin_id>/stats', views.SubbasinStatsView.as_view(), name='stats'),
+    path('subbasin/<int:subbasin_id>/', views.SubbasinView.as_view(), name='map'),
+    path('subbasin2/<int:subbasin_id>/', views.Subbasin2View.as_view(), name='stats'),
 ]

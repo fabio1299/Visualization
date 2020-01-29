@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
-from .models import Hydrostn30Subbasin
+from .models import Hydrostn30Subbasin, CatchmentStatsAirTemperature, CatchmentStatsEvapotranspiration, \
+    CatchmentStatsRunoff, CatchmentStatsPrecipitation, CatchmentStatsSoilMoisture
 import pandas as pd
 from . import geometry, db_routines
 from wbm_viz.graphql import run_query, query_model_stats_monthly, query_to_df
@@ -10,9 +11,9 @@ from wbm_viz.graphql import run_query, query_model_stats_monthly, query_to_df
 def index(request):
     return render(request, 'home.html')
 
-class SubbasinMapView(View):
+class SubbasinView(View):
 
-    template_name = 'subbasin_map.html'
+    template_name = 'subbasin.html'
 
     def get(self, request, subbasin_id=1, *args, **kwargs):
         subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
@@ -39,13 +40,17 @@ class SubbasinMapView(View):
         return render(request, self.template_name, context=context)
 
 
-class SubbasinStatsView(View):
-    template_name = 'subbasin_stats.html'
+class Subbasin2View(View):
+    template_name = 'subbasin2.html'
 
     def get(self, request, subbasin_id=1, *args, **kwargs):
-        # result = run_query(
-        #     query_model_stats_monthly(["TerraClimate"], "Subbasin", subbasin_id)
-        # )
-        # dfs = query_to_df(result)
+        # subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
+
+        air_temperature = CatchmentStatsAirTemperature.objects.filter(subbasin_id=subbasin_id).first()
+        # evapotranspiration = CatchmentStatsEvapotranspiration.objects.filter(subbasin_id=subbasin_id).first()
+        # runoff = CatchmentStatsRunoff.objects.filter(subbasin_id=subbasin_id).first()
+        # precipitation = CatchmentStatsPrecipitation.objects.filter(subbasin_id=subbasin_id).first()
+        # soil_moisture = CatchmentStatsSoilMoisture.objects.filter(subbasin_id=subbasin_id).first()
+
         context = {'subbasin_id': subbasin_id}
         return render(request,self.template_name,context=context)
