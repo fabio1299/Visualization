@@ -1,6 +1,7 @@
 DROP FUNCTION catchment_air_temperature(integer);
 CREATE OR REPLACE FUNCTION catchment_air_temperature(integer)
     RETURNS TABLE(
+                    subbasin_id integer,
                     date varchar(10),
                     model_name text,
                     mean_zonal_mean double precision,
@@ -12,7 +13,8 @@ AS $$
     DECLARE
         subbasin_id alias for $1;
     BEGIN
-         RETURN QUERY SELECT "Date",
+         RETURN QUERY SELECT subbasin_id as subbasin_id,
+                             "Date",
                              "model_name",
 --                           Weighted Average by Subbasin Area
                              SUM("ZonalMean" * "ZoneArea")/SUM("ZoneArea") as mean_zonal_mean,
