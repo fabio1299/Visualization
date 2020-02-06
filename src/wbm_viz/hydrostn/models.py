@@ -58,7 +58,7 @@ class CatchmentBasins(models.Model):
 
 
 class CatchmentStatsAirTemperature(models.Model):
-    subbasin_id = models.IntegerField(blank=True, primary_key=True)
+    subbasin_id = models.IntegerField(blank=True, null=True)
     date = models.CharField(max_length=10, blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
     mean_zonal_mean = models.FloatField(blank=True, null=True)
@@ -109,7 +109,6 @@ class CatchmentStatsRunoff(models.Model):
     class Meta:
         managed = False
         db_table = 'catchment_stats_runoff'
-        app_label = 'hydrostn'
 
 class CatchmentStatsSoilMoisture(models.Model):
     subbasin_id = models.IntegerField(blank=True, null=True)

@@ -1,9 +1,6 @@
-
 DROP TABLE catchment_basins;
 CREATE TABLE catchment_basins(
---  subbasin
     sample_id integer PRIMARY KEY,
---  Array of subbasins making up corresponding catchment
     basins integer []
 );
 

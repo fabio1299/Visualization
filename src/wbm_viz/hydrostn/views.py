@@ -3,14 +3,10 @@ from django.http import HttpResponse
 from django.views import View
 from .models import Hydrostn30Subbasin, CatchmentStatsAirTemperature, CatchmentStatsEvapotranspiration, \
     CatchmentStatsRunoff, CatchmentStatsPrecipitation, CatchmentStatsSoilMoisture
-import pandas as pd
 from . import geometry, db_routines
 from wbm_viz.graphql import run_query, query_model_stats_monthly, query_to_df
-
-#plotting
-import plotly
-import plotly.graph_objects as go
-import json
+from .tasks import plot_queryset, my_task
+import pandas as pd
 
 # Create your views here.
 def index(request):
@@ -49,30 +45,14 @@ class Subbasin2View(View):
     template_name = 'subbasin2.html'
 
     def get(self, request, subbasin_id=1, *args, **kwargs):
-        # subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
 
+        # air_temperature = list(CatchmentStatsAirTemperature.objects.filter(subbasin_id=subbasin_id))
         evapotranspiration = CatchmentStatsEvapotranspiration.objects.filter(subbasin_id=subbasin_id)
-        # air_temperature = CatchmentStatsAirTemperature.objects.filter(subbasin_id=subbasin_id)
-        # runoff = CatchmentStatsRunoff.objects.filter(subbasin_id=subbasin_id)
-        # precipitation = CatchmentStatsPrecipitation.objects.filter(subbasin_id=subbasin_id)
-        # soil_moisture = CatchmentStatsSoilMoisture.objects.filter(subbasin_id=subbasin_id)
+        runoff = CatchmentStatsRunoff.objects.filter(subbasin_id=subbasin_id)
+        # precipitation = list(CatchmentStatsPrecipitation.objects.filter(subbasin_id=subbasin_id))
+        # soil_moisture = list(CatchmentStatsSoilMoisture.objects.filter(subbasin_id=subbasin_id))
 
-        df_evapotranspiration = pd.DataFrame(evapotranspiration.values())
-
-        data = [
-            go.Scattergl(
-                x=df_evapotranspiration['date'],
-                y=df_evapotranspiration['mean_zonal_mean'],
-            )
-        ]
-
-        layout = go.Layout(
-            title='Evapotranspiration',
-        )
-
-        fig = go.Figure(data=data, layout=layout)
-
-        plt_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-        context = {'subbasin_id': subbasin_id, 'plt_json':plt_json}
-        return render(request,self.template_name,context=context)
+        #plot_queryset.delay(list(evapotranspiration.values()),['Terraclimate','WBMprist_CRUTSv401','WBMprist_GPCCv7'])
+        result = my_task.delay(10)
+        context = {'subbasin_id': subbasin_id, 'task_id': result.task_id}
+        return render(request,self.template_name, context=context)
