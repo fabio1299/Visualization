@@ -52,7 +52,7 @@ class Subbasin2View(View):
         # precipitation = list(CatchmentStatsPrecipitation.objects.filter(subbasin_id=subbasin_id))
         # soil_moisture = list(CatchmentStatsSoilMoisture.objects.filter(subbasin_id=subbasin_id))
 
-        #plot_queryset.delay(list(evapotranspiration.values()),['Terraclimate','WBMprist_CRUTSv401','WBMprist_GPCCv7'])
-        result = my_task.delay(10)
+        result = plot_queryset.delay(list(evapotranspiration.values()),['Terraclimate','WBMprist_CRUTSv401','WBMprist_GPCCv7'])
+        # result = my_task.delay(10)
         context = {'subbasin_id': subbasin_id, 'task_id': result.task_id}
         return render(request,self.template_name, context=context)

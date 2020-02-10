@@ -8,9 +8,13 @@ from plotly.subplots import make_subplots
 import json
 
 @shared_task(bind=True)
-def plot_queryset(queryset_values,model_names):
+def plot_queryset(self,queryset_values,model_names):
+    progress_recorder = ProgressRecorder(self)
+
     df = pd.DataFrame(queryset_values)
+
     fig = go.Figure()
+
     for model in model_names:
         model_df = df.loc[df['model_name'] == model]
 
@@ -19,6 +23,8 @@ def plot_queryset(queryset_values,model_names):
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json
 
+
+# Test task
 import time
 @shared_task(bind=True)
 def my_task(self, seconds):
