@@ -18,6 +18,8 @@ ALTER TABLE subbasin_runoff_monthly ADD COLUMN id SERIAL PRIMARY KEY;
 ALTER TABLE subbasin_soil_moisture_monthly ADD COLUMN id SERIAL PRIMARY KEY;
 AlTER TABLE confluence_discharge_monthly ADD COLUMN id SERIAL PRIMARY KEY;
 
+CREATE INDEX ON catchment_stats_air_temperature("subbasin_id");
+
 
 
 

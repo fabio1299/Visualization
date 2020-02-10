@@ -2,36 +2,114 @@
 {% load static %}
 
 {% block script %}
+    <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 
 {% endblock %}
 
 {% block content %}
 
-    <div id="celery-result"></div>
-    <div class='progress-wrapper'>
-        <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class='progress-wrapper'>
+                <div id='evap-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+            </div>
+            <div id="evap-message">Waiting for progress to start...</div>
+            <div id="evap-plot" class="chart"></div>
+        </div>
     </div>
-    <div id="progress-bar-message">Waiting for progress to start...</div>
 
-    <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class='progress-wrapper'>
+                <div id='air-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+            </div>
+            <div id="air-message">Waiting for progress to start...</div>
+            <div id="air-plot" class="chart"></div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class='progress-wrapper'>
+                <div id='precip-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+            </div>
+            <div id="precip-message">Waiting for progress to start...</div>
+            <div id="precip-plot" class="chart"></div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class='progress-wrapper'>
+                <div id='runoff-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+            </div>
+            <div id="runoff-message">Waiting for progress to start...</div>
+            <div id="runoff-plot" class="chart"></div>
+
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class='progress-wrapper'>
+                <div id='soil-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+            </div>
+            <div id="soil-message">Waiting for progress to start...</div>
+            <div id="soil-plot" class="chart"></div>
+
+        </div>
+
+
+    </div>
+
+
+
+
     <script type="text/javascript">
-        // vanilla JS version
+        function customResult(resultElement, result) {
+            let graphs = JSON.parse(result);
+            Plotly.plot(resultElement, graphs, {});
+        }
+
+        function plot_async(progressUrl, result_id, bar_id, bar_message) {
+            // vanilla JS version
+            CeleryProgressBar.initProgressBar(progressUrl, {
+                onResult: customResult,
+                resultElementId: result_id,
+                progressBarId: bar_id,
+                progressBarMessageId: bar_message,
+                pollInterval: 500
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-            var progressUrl = "{% url 'celery_progress:task_status' task_id %}";
-            CeleryProgressBar.initProgressBar(progressUrl);
+
+            plot_async("{% url 'celery_progress:task_status' evap_task_id %}",
+                'evap-plot', 'evap-bar', 'evap-message');
+            plot_async("{% url 'celery_progress:task_status' air_task_id %}",
+                'air-plot', 'air-bar', 'air-message');
+            plot_async("{% url 'celery_progress:task_status' precip_task_id %}",
+                'precip-plot', 'precip-bar', 'precip-message');
+            plot_async("{% url 'celery_progress:task_status' runoff_task_id %}",
+                'runoff-plot', 'runoff-bar', 'runoff-message');
+            plot_async("{% url 'celery_progress:task_status' soil_task_id %}",
+                'soil-plot', 'soil-bar', 'soil-message');
+
         });
+
     </script>
 
-    <div id="evapotranspiration" class="chart"></div>
-
-    {#    <script src="https://d3js.org/d3.v5.min.js"></script>#}
-    {#    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>#}
-    {#    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
-    {##}
-    {#    <script type="text/javascript">#}
-    {#      var graphs = {{plt_json1| safe}};#}
-    {#      Plotly.plot('evapotranspiration',graphs,{});#}
-    {#    </script>#}
 {% endblock %}
 
 

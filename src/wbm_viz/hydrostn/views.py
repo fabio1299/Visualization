@@ -46,13 +46,20 @@ class Subbasin2View(View):
 
     def get(self, request, subbasin_id=1, *args, **kwargs):
 
-        # air_temperature = list(CatchmentStatsAirTemperature.objects.filter(subbasin_id=subbasin_id))
-        evapotranspiration = CatchmentStatsEvapotranspiration.objects.filter(subbasin_id=subbasin_id)
-        runoff = CatchmentStatsRunoff.objects.filter(subbasin_id=subbasin_id)
-        # precipitation = list(CatchmentStatsPrecipitation.objects.filter(subbasin_id=subbasin_id))
-        # soil_moisture = list(CatchmentStatsSoilMoisture.objects.filter(subbasin_id=subbasin_id))
 
-        result = plot_queryset.delay(list(evapotranspiration.values()),['Terraclimate','WBMprist_CRUTSv401','WBMprist_GPCCv7'])
-        # result = my_task.delay(10)
-        context = {'subbasin_id': subbasin_id, 'task_id': result.task_id}
+        def trigger_plot(model):
+            qs = model.objects.filter(subbasin_id=subbasin_id)
+
+            result = plot_queryset.delay(list(qs.values()),['Terraclimate','WBMprist_CRUTSv401','WBMprist_GPCCv7'])
+            return result
+
+        evap = trigger_plot(CatchmentStatsEvapotranspiration)
+        air = trigger_plot(CatchmentStatsAirTemperature)
+        precip = trigger_plot(CatchmentStatsPrecipitation)
+        runoff = trigger_plot(CatchmentStatsRunoff)
+        soil = trigger_plot(CatchmentStatsSoilMoisture)
+
+        context = {'subbasin_id': subbasin_id, 'evap_task_id': evap.task_id,'air_task_id': air.task_id,
+                   'precip_task_id':precip.task_id,'runoff_task_id':runoff.task_id,
+                   'soil_task_id':soil.task_id}
         return render(request,self.template_name, context=context)
