@@ -46,10 +46,24 @@ class Hydrostn30Subbasin(models.Model):
             polygon = GEOSGeometry(hex_wkb)
             return polygon.geojson
 
+class Hydrostn30Streamline(models.Model):
+    id = models.IntegerField(primary_key=True)
+    basin_id = models.IntegerField(blank=True, null=True)
+    stream_order = models.IntegerField(blank=True, null=True)
+    color = models.IntegerField(blank=True, null=True)
+    next_station = models.IntegerField(blank=True, null=True)
+    geom = models.GeometryField(srid=0, blank=True, null=True)
+
+    class Meta:
+        managed = False  # Created from a view. Don't remove.
+        db_table = 'hydrostn30_streamline'
+
 class CatchmentBasins(models.Model):
     sample_id = models.IntegerField(primary_key=True)
     basins = models.TextField(blank=True, null=True)  # This field type is a guess.
     catchment = models.GeometryField(srid=0, blank=True, null=True)
+    streamlines = models.GeometryField(srid=0, blank=True, null=True)
+
 
     class Meta:
         managed = False

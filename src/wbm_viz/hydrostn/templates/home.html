@@ -1,7 +1,221 @@
 {% extends "base.html" %}
+{% load static %}
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css %}
 
-{% block title %} Subbasin {{ subbasin.id }} {% endblock %}
+{% block style %}
+    <style>
+        .map {
+            height: 800px;
+        }
+
+        #subbasin_legend {
+            border-color: {{ polygon_style.sub_border }};
+            border-style: solid;
+            background-color: {{ polygon_style.sub_fill }};
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+        }
+
+        #catchment_legend {
+            border-color: {{ polygon_style.catch_border }};
+            border-style: solid;
+            background-color: {{ polygon_style.catch_fill }};
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        const argentina_coords = [-38.4161, -63.6167]
+
+        function catchment_style(feature) {
+            return {
+                stroke: false,
+                color: '#33BBFF',
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#33BBFF',
+                fillOpacity: 0.3
+            }
+        }
+
+        function subbasin_style(feature) {
+            return {
+                color: '#ff3300',
+                weight: 2,
+                opacity: 0.8,
+                fill: false,
+                dashArray:5,
+            }
+        }
+
+        function subbasin_map_init(map, options) {
+            {#map.setView(argentina_coords, 3);#}
+
+            const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }}, {style: subbasin_style});
+            const subbasin_catchment = L.geoJSON({{ catch_geom.geojson |safe }}, {style: catchment_style});
+            const streamlines = L.geoJSON({{ stream_geom.geojson |safe }});
+
+            subbasin_catchment.addTo(map);
+            streamlines.addTo(map);
+            subbasin_polygon.addTo(map);
+
+            map.fitWorld();
+            map.fitBounds(subbasin_catchment.getBounds());
+        }
+    </script>
+
+{% endblock %}
 
 {% block content %}
 
+        <div class="row justify-content-center">
+
+            <h2>{{ subbasin.basin_name }} {{ subbasin.id }} Catchment</h2>
+
+        </div>
+
+        <div class="map" id="subbasin_map">
+            {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-6 ">
+                <button class="btn btn-primary btn-block" id="next-button">Next DownStream Subbasin</button>
+            </div>
+
+            <div class="col-lg-6 justify-content-center">
+                <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class='progress-wrapper'>
+                    <div id='evap-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+                </div>
+                <div id="evap-message">Waiting for progress to start...</div>
+                <div id="evap-plot" class="chart"></div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class='progress-wrapper'>
+                    <div id='air-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+                </div>
+                <div id="air-message">Waiting for progress to start...</div>
+                <div id="air-plot" class="chart"></div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class='progress-wrapper'>
+                    <div id='precip-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+                </div>
+                <div id="precip-message">Waiting for progress to start...</div>
+                <div id="precip-plot" class="chart"></div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class='progress-wrapper'>
+                    <div id='runoff-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+                </div>
+                <div id="runoff-message">Waiting for progress to start...</div>
+                <div id="runoff-plot" class="chart"></div>
+
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class='progress-wrapper'>
+                    <div id='soil-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+                </div>
+                <div id="soil-message">Waiting for progress to start...</div>
+                <div id="soil-plot" class="chart"></div>
+
+            </div>
+
+
+        </div>
+
+
+    <script type="text/javascript">
+        function customResult(resultElement, result) {
+            let graphs = JSON.parse(result);
+            Plotly.plot(resultElement, graphs, {});
+        }
+
+        function plot_async(progressUrl, result_id, bar_id, bar_message) {
+            // vanilla JS version
+            CeleryProgressBar.initProgressBar(progressUrl, {
+                onResult: customResult,
+                resultElementId: result_id,
+                progressBarId: bar_id,
+                progressBarMessageId: bar_message,
+                pollInterval: 500
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            plot_async("{% url 'celery_progress:task_status' evap_task_id %}",
+                'evap-plot', 'evap-bar', 'evap-message');
+            plot_async("{% url 'celery_progress:task_status' air_task_id %}",
+                'air-plot', 'air-bar', 'air-message');
+            plot_async("{% url 'celery_progress:task_status' precip_task_id %}",
+                'precip-plot', 'precip-bar', 'precip-message');
+            plot_async("{% url 'celery_progress:task_status' runoff_task_id %}",
+                'runoff-plot', 'runoff-bar', 'runoff-message');
+            plot_async("{% url 'celery_progress:task_status' soil_task_id %}",
+                'soil-plot', 'soil-bar', 'soil-message');
+
+        });
+
+    </script>
+
+    {# button control#}
+    <script type="text/javascript">
+
+        {#Invalid Targer#}
+        if ({{ subbasin.next_station }} == 0
+        )
+        {
+            document.getElementById("next-button").disabled = true;
+        }
+        document.getElementById("next-button").onclick = function () {
+            location.href = "../{{ subbasin.next_station }}"
+        }
+
+        document.getElementById("random-button").onclick = function () {
+            const random_num = Math.floor(Math.random() * Math.floor(48777));
+
+            location.href = `../${random_num}`
+        }
+    </script>
+
 {% endblock %}
+
+
