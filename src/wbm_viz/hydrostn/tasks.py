@@ -9,7 +9,7 @@ import json
 import time
 
 @shared_task(bind=True)
-def plot_queryset(self,queryset_values,model_names,title="title"):
+def plot_queryset(self,queryset_values,model_names,y_param,title="title",units="units"):
 
     df = pd.DataFrame(queryset_values)
     fig = go.Figure()
@@ -17,7 +17,7 @@ def plot_queryset(self,queryset_values,model_names,title="title"):
     for i, model in enumerate(model_names):
         model_df = df.loc[df['model_name'] == model]
 
-        fig.add_trace(go.Scattergl(x=model_df['date'], y=model_df['mean_zonal_mean'], mode='lines', name=model))
+        fig.add_trace(go.Scattergl(x=model_df['date'], y=model_df[y_param], mode='lines', name=model))
 
     fig.update_layout(
         legend_orientation="h",
@@ -27,7 +27,8 @@ def plot_queryset(self,queryset_values,model_names,title="title"):
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'},
-        yaxis_title="y Axis Title",
+        yaxis_title=units,
+        autosize=True,
     )
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json

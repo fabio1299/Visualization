@@ -135,7 +135,7 @@ class CatchmentStatsSoilMoisture(models.Model):
 
 
 class ConfluenceDischargeMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
     year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
     month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
     date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
@@ -147,14 +147,14 @@ class ConfluenceDischargeMonthly(models.Model):
         db_table = 'confluence_discharge_monthly'
 
 class SubbasinAirTemperatureMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    zonalmean = models.FloatField(db_column='ZonalMean', blank=True, null=True)  # Field name made lowercase.
-    zonalmin = models.FloatField(db_column='ZonalMin', blank=True, null=True)  # Field name made lowercase.
-    zonalmax = models.FloatField(db_column='ZonalMax', blank=True, null=True)  # Field name made lowercase.
-    zonearea = models.FloatField(db_column='ZoneArea', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    zonal_mean = models.FloatField(blank=True, null=True)
+    zonal_min = models.FloatField(blank=True, null=True)
+    zonal_max = models.FloatField(blank=True, null=True)
+    zone_area = models.FloatField(blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -163,14 +163,14 @@ class SubbasinAirTemperatureMonthly(models.Model):
 
 
 class SubbasinEvapotranspirationMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    zonalmean = models.FloatField(db_column='ZonalMean', blank=True, null=True)  # Field name made lowercase.
-    zonalmin = models.FloatField(db_column='ZonalMin', blank=True, null=True)  # Field name made lowercase.
-    zonalmax = models.FloatField(db_column='ZonalMax', blank=True, null=True)  # Field name made lowercase.
-    zonearea = models.FloatField(db_column='ZoneArea', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    zonal_mean = models.FloatField(blank=True, null=True)
+    zonal_min = models.FloatField(blank=True, null=True)
+    zonal_max = models.FloatField(blank=True, null=True)
+    zone_area = models.FloatField(blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -179,14 +179,14 @@ class SubbasinEvapotranspirationMonthly(models.Model):
 
 
 class SubbasinPrecipitationMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    zonalmean = models.FloatField(db_column='ZonalMean', blank=True, null=True)  # Field name made lowercase.
-    zonalmin = models.FloatField(db_column='ZonalMin', blank=True, null=True)  # Field name made lowercase.
-    zonalmax = models.FloatField(db_column='ZonalMax', blank=True, null=True)  # Field name made lowercase.
-    zonearea = models.FloatField(db_column='ZoneArea', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    zonal_mean = models.FloatField(blank=True, null=True)
+    zonal_min = models.FloatField(blank=True, null=True)
+    zonal_max = models.FloatField(blank=True, null=True)
+    zone_area = models.FloatField(blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -195,14 +195,14 @@ class SubbasinPrecipitationMonthly(models.Model):
 
 
 class SubbasinRunoffMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    zonalmean = models.FloatField(db_column='ZonalMean', blank=True, null=True)  # Field name made lowercase.
-    zonalmin = models.FloatField(db_column='ZonalMin', blank=True, null=True)  # Field name made lowercase.
-    zonalmax = models.FloatField(db_column='ZonalMax', blank=True, null=True)  # Field name made lowercase.
-    zonearea = models.FloatField(db_column='ZoneArea', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    zonal_mean = models.FloatField(blank=True, null=True)
+    zonal_min = models.FloatField(blank=True, null=True)
+    zonal_max = models.FloatField(blank=True, null=True)
+    zone_area = models.FloatField(blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -211,14 +211,14 @@ class SubbasinRunoffMonthly(models.Model):
 
 
 class SubbasinSoilMoistureMonthly(models.Model):
-    sampleid = models.IntegerField(db_column='SampleID', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    zonalmean = models.FloatField(db_column='ZonalMean', blank=True, null=True)  # Field name made lowercase.
-    zonalmin = models.FloatField(db_column='ZonalMin', blank=True, null=True)  # Field name made lowercase.
-    zonalmax = models.FloatField(db_column='ZonalMax', blank=True, null=True)  # Field name made lowercase.
-    zonearea = models.FloatField(db_column='ZoneArea', blank=True, null=True)  # Field name made lowercase.
+    subbasin_id = models.IntegerField(blank=True, null=True)
+    date = models.CharField(max_length=10, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
+    zonal_mean = models.FloatField(blank=True, null=True)
+    zonal_min = models.FloatField(blank=True, null=True)
+    zonal_max = models.FloatField(blank=True, null=True)
+    zone_area = models.FloatField(blank=True, null=True)
     model_name = models.TextField(blank=True, null=True)
 
     class Meta:
