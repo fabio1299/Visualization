@@ -190,40 +190,119 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='evap-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div id="evap-basin-message">Generating Air Temperature Plot...</div>
+                    <div id="evap-basin-plot" class="chart"></div>
+
+
+                </div>
+            </div>
+
         </div>
 
         <div class="tab-pane fade" id="nav-precip" role="tabpanel">
 
-            <div class='progress-wrapper'>
-                <div id='precip-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class='progress-wrapper'>
+                        <div id='precip-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="precip-message">Generating Precipitation Plot...</div>
+                    <div id="precip-plot" class="chart"></div>
                 </div>
             </div>
-            <div id="precip-message">Generating Precipitation Plot...</div>
-            <div id="precip-plot" class="chart"></div>
 
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='precip-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div id="precip-basin-message">Generating Air Temperature Plot...</div>
+                    <div id="precip-basin-plot" class="chart"></div>
+
+
+                </div>
+            </div>
         </div>
 
         <div class="tab-pane fade" id="nav-runoff" role="tabpanel">
 
-            <div class='progress-wrapper'>
-                <div id='runoff-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='runoff-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="runoff-message">Generating Runoff Plot...</div>
+                    <div id="runoff-plot" class="chart"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class='progress-wrapper'>
+                        <div id='runoff-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="runoff-basin-message">Generating Precipitation Plot...</div>
+                    <div id="runoff-basin-plot" class="chart"></div>
                 </div>
             </div>
-            <div id="runoff-message">Generating Runoff Plot...</div>
-            <div id="runoff-plot" class="chart"></div>
-
 
         </div>
 
         <div class="tab-pane fade" id="nav-soil" role="tabpanel">
 
-            <div class='progress-wrapper'>
-                <div id='soil-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='soil-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="soil-message">Generating Soil Moisture Plot...</div>
+                    <div id="soil-plot" class="chart"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class='progress-wrapper'>
+                        <div id='soil-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="soil-basin-message">Generating Precipitation Plot...</div>
+                    <div id="soil-basin-plot" class="chart"></div>
                 </div>
             </div>
-            <div id="soil-message">Generating Soil Moisture Plot...</div>
-            <div id="soil-plot" class="chart"></div>
 
         </div>
 
@@ -233,7 +312,8 @@
     <script type="text/javascript">
         function customResult(resultElement, result) {
             let graphs = JSON.parse(result);
-            Plotly.plot(resultElement, graphs, {});
+            let config = {responsive: true}
+            Plotly.plot(resultElement, graphs, {}, config);
         }
 
         function plot_async(progressUrl, result_id, bar_id, bar_message) {
@@ -253,6 +333,9 @@
 
             plot_async("{% url 'celery_progress:task_status' evap_catch_task_id %}",
                 'evap-plot', 'evap-bar', 'evap-message');
+            plot_async("{% url 'celery_progress:task_status' evap_basin_task_id %}",
+                'evap-basin-plot', 'evap-basin-bar', 'evap-basin-message');
+
 
             plot_async("{% url 'celery_progress:task_status' air_catch_task_id %}",
                 'air-plot', 'air-bar', 'air-message');
@@ -261,13 +344,20 @@
 
             plot_async("{% url 'celery_progress:task_status' precip_catch_task_id %}",
                 'precip-plot', 'precip-bar', 'precip-message');
+            plot_async("{% url 'celery_progress:task_status' precip_basin_task_id %}",
+                'precip-basin-plot', 'precip-basin-bar', 'precip-basin-message');
+
 
             plot_async("{% url 'celery_progress:task_status' runoff_catch_task_id %}",
                 'runoff-plot', 'runoff-bar', 'runoff-message');
+            plot_async("{% url 'celery_progress:task_status' runoff_basin_task_id %}",
+                'runoff-basin-plot', 'runoff-basin-bar', 'runoff-basin-message');
+
 
             plot_async("{% url 'celery_progress:task_status' soil_catch_task_id %}",
                 'soil-plot', 'soil-bar', 'soil-message');
-
+            plot_async("{% url 'celery_progress:task_status' soil_basin_task_id %}",
+                'soil-basin-plot', 'soil-basin-bar', 'soil-basin-message');
         });
 
     </script>
