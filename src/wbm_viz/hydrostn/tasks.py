@@ -4,9 +4,7 @@ from celery_progress.backend import ProgressRecorder
 import pandas as pd
 import plotly
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import json
-import time
 
 @shared_task(bind=True)
 def plot_queryset(self,queryset_values,model_names,y_param,title="title",units="units"):
@@ -17,7 +15,7 @@ def plot_queryset(self,queryset_values,model_names,y_param,title="title",units="
     for i, model in enumerate(model_names):
         model_df = df.loc[df['model_name'] == model]
 
-        fig.add_trace(go.Scattergl(x=model_df['date'], y=model_df[y_param], mode='lines', name=model))
+        fig.add_trace(go.Scatter(x=model_df['date'], y=model_df[y_param], mode='lines', name=model))
 
     fig.update_layout(
         legend_orientation="h",

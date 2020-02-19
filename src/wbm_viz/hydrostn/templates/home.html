@@ -361,13 +361,37 @@
     </script>
 
     <script type="text/javascript">
+
+        {# Force Plots to redo autolayout when switching to tabs #}
+
+        $('.nav-tabs a[href="#nav-discharge"]').on('shown.bs.tab', function(){
+            Plotly.relayout('discharge-plot',{});
+        });
+
         $('.nav-tabs a[href="#nav-air"]').on('shown.bs.tab', function(){
             Plotly.relayout('air-plot',{});
             Plotly.relayout('air-basin-plot',{});
         });
 
+         $('.nav-tabs a[href="#nav-evap"]').on('shown.bs.tab', function(){
+            Plotly.relayout('evap-plot',{});
+            Plotly.relayout('evap-basin-plot',{});
+        });
 
+          $('.nav-tabs a[href="#nav-precip"]').on('shown.bs.tab', function(){
+            Plotly.relayout('precip-plot',{});
+            Plotly.relayout('precip-basin-plot',{});
+        });
 
+          $('.nav-tabs a[href="#nav-runoff"]').on('shown.bs.tab', function(){
+            Plotly.relayout('runoff-plot',{});
+            Plotly.relayout('runoff-basin-plot',{});
+        });
+
+          $('.nav-tabs a[href="#nav-soil"]').on('shown.bs.tab', function(){
+            Plotly.relayout('soil-plot',{});
+            Plotly.relayout('soil-basin-plot',{});
+        });
 
     </script>
 
