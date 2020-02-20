@@ -17,6 +17,3 @@ WITH RECURSIVE basinCTE as(
     )
     SELECT * FROM basinCTE;
 $$;
-
-alter function get_catchment_table(integer) owner to danielv;
-

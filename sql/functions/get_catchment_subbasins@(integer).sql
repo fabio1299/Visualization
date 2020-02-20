@@ -8,7 +8,7 @@ $$
         subbasin_id alias for $1;
     BEGIN
          RETURN QUERY SELECT * FROM "HydroSTN30"."Subbasin" WHERE "ID" IN
-                                                    (SELECT unnest(basins) from catchment_basins_test where sample_id = subbasin_id);
+                                                    (SELECT unnest(basins) from catchment_basins where sample_id = subbasin_id);
 END;
 $$;
 
