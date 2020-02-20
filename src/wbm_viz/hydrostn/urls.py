@@ -14,12 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,re_path
+from django.views.generic.base import RedirectView
 from hydrostn import views
 
-urlpatterns = [
 
-    path('', views.index),
-    path('subbasin/', views.SubbasinMapView.as_view()),
-    # match 1-5 digit hydrostn30_subbasin id
-    re_path(r'^subbasin/(?P<subbasin_id>[0-9]{1,5})/$', views.SubbasinMapView.as_view())
+urlpatterns = [
+    path('', RedirectView.as_view(url='/home/1')),
+    path('home/<int:subbasin_id>/', views.HomeView.as_view(), name='home'),
 ]
