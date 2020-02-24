@@ -43,13 +43,14 @@ class HomeView(View):
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
 
         # Map
+        subbasin_count = SUBBASIN[country].objects.count()
         subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
         catch_cache = CATCHMENT_BASINS[country].objects.filter(sample_id=subbasin_id).first()
         stream = STREAMLINE[country].objects.filter(id__in=catch_cache.basins)
 
         if catch_cache.catchment == None:
             # call proc to gen table from DB
-            catch_table = db_routines.get_catchment_table(subbasin)
+            catch_table = db_routines.get_catchment_table(subbasin, country, '01min')
 
             # collect all geom
             catch_collection = geometry.get_geometrycollection(catch_table)
@@ -66,7 +67,7 @@ class HomeView(View):
 
         # Plots
         def trigger_plot(model, title=None, y_param='mean_zonal_mean'):
-            qs = model.objects.filter(subbasin_id=subbasin_id)
+            qs = model.objects.filter(subbasin_id=subbasin_id).order_by('subbasin_id', 'date')
 
             result = plot_queryset.delay(list(qs.values()), ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
                                          y_param, title=title)
@@ -89,7 +90,7 @@ class HomeView(View):
         runoff_catch = trigger_plot(CATCHMENT_STATS_RUNOFF[country], title="Catchment Mean Runoff")
         soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture")
 
-        context = {
+        context = {'country': country, 'subbasin_count': subbasin_count,
             'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,
             'stream_geom': stream_geom, 'evap_catch_task_id': evap_catch.task_id,
             'air_catch_task_id': air_catch.task_id, 'precip_catch_task_id': precip_catch.task_id,
