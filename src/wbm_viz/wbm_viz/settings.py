@@ -115,6 +115,20 @@ DATABASES = {
             'DEPENDENCIES': [],
         }
     },
+    'peru_01min': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'Peru_01min',
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        },
+        'HOST': os.environ.get('DB_HOST', None),
+        'PORT': os.environ.get('DB_PORT', None),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'TEST': {
+            'DEPENDENCIES': [],
+        }
+    },
 
 }
 

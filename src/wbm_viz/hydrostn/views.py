@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import View
-from .models import Hydrostn30Subbasin, Hydrostn30Streamline, CatchmentStatsEvapotranspiration, \
-    CatchmentStatsRunoff, CatchmentStatsPrecipitation, CatchmentStatsSoilMoisture, CatchmentBasins, \
-    CatchmentStatsAirTemperature, SubbasinAirTemperatureMonthly, SubbasinEvapotranspirationMonthly, \
-    SubbasinPrecipitationMonthly, SubbasinRunoffMonthly, SubbasinSoilMoistureMonthly, ConfluenceDischargeMonthly
+from .models import ArgentinaHydrostn30Subbasin, ArgentinaHydrostn30Streamline, ArgentinaCatchmentStatsEvapotranspiration, \
+    ArgentinaCatchmentStatsRunoff, ArgentinaCatchmentStatsPrecipitation, ArgentinaCatchmentStatsSoilMoisture, ArgentinaCatchmentBasins, \
+    ArgentinaCatchmentStatsAirTemperature, ArgentinaSubbasinAirTemperatureMonthly, ArgentinaSubbasinEvapotranspirationMonthly, \
+    ArgentinaSubbasinPrecipitationMonthly, ArgentinaSubbasinRunoffMonthly, ArgentinaSubbasinSoilMoistureMonthly, ArgentinaConfluenceDischargeMonthly
 from . import geometry, db_routines
 from .tasks import plot_queryset, my_task
 
@@ -14,9 +14,9 @@ class HomeView(View):
     def get(self, request, subbasin_id=1, *args, **kwargs):
 
         # Map
-        subbasin = Hydrostn30Subbasin.objects.filter(id=subbasin_id).first()
-        catch_cache = CatchmentBasins.objects.filter(sample_id=subbasin_id).first()
-        stream = Hydrostn30Streamline.objects.filter(id__in=catch_cache.basins)
+        subbasin = ArgentinaHydrostn30Subbasin.objects.filter(id=subbasin_id).first()
+        catch_cache = ArgentinaCatchmentBasins.objects.filter(sample_id=subbasin_id).first()
+        stream = ArgentinaHydrostn30Streamline.objects.filter(id__in=catch_cache.basins)
 
         if catch_cache.catchment == None:
             # call proc to gen table from DB
@@ -43,22 +43,22 @@ class HomeView(View):
                                          y_param, title=title)
             return result
 
-        discharge = trigger_plot(ConfluenceDischargeMonthly, y_param='discharge', title='Basin Monthly Discharge')
+        discharge = trigger_plot(ArgentinaConfluenceDischargeMonthly, y_param='discharge', title='Basin Monthly Discharge')
 
-        evap_basin = trigger_plot(SubbasinEvapotranspirationMonthly, y_param='zonal_mean',
+        evap_basin = trigger_plot(ArgentinaSubbasinEvapotranspirationMonthly, y_param='zonal_mean',
                                   title="Basin Mean Evapotranspiration")
-        air_basin = trigger_plot(SubbasinAirTemperatureMonthly, y_param='zonal_mean',
+        air_basin = trigger_plot(ArgentinaSubbasinAirTemperatureMonthly, y_param='zonal_mean',
                                  title="Basin Mean Air Temperature")
-        precip_basin = trigger_plot(SubbasinPrecipitationMonthly, y_param="zonal_mean",
+        precip_basin = trigger_plot(ArgentinaSubbasinPrecipitationMonthly, y_param="zonal_mean",
                                     title="Basin Mean Precipitation")
-        runoff_basin = trigger_plot(SubbasinRunoffMonthly, y_param="zonal_mean", title="Basin Mean Runoff")
-        soil_basin = trigger_plot(SubbasinSoilMoistureMonthly, y_param="zonal_mean", title="Basin Mean Soil Moisture")
+        runoff_basin = trigger_plot(ArgentinaSubbasinRunoffMonthly, y_param="zonal_mean", title="Basin Mean Runoff")
+        soil_basin = trigger_plot(ArgentinaSubbasinSoilMoistureMonthly, y_param="zonal_mean", title="Basin Mean Soil Moisture")
 
-        evap_catch = trigger_plot(CatchmentStatsEvapotranspiration, title="Catchment Mean Evapotranspiration")
-        air_catch = trigger_plot(CatchmentStatsAirTemperature, title="Catchment Mean Air Temperature")
-        precip_catch = trigger_plot(CatchmentStatsPrecipitation, title="Catchment Mean Precipitation")
-        runoff_catch = trigger_plot(CatchmentStatsRunoff, title="Catchment Mean Runoff")
-        soil_catch = trigger_plot(CatchmentStatsSoilMoisture, title="Catchment Mean Soil Moisture")
+        evap_catch = trigger_plot(ArgentinaCatchmentStatsEvapotranspiration, title="Catchment Mean Evapotranspiration")
+        air_catch = trigger_plot(ArgentinaCatchmentStatsAirTemperature, title="Catchment Mean Air Temperature")
+        precip_catch = trigger_plot(ArgentinaCatchmentStatsPrecipitation, title="Catchment Mean Precipitation")
+        runoff_catch = trigger_plot(ArgentinaCatchmentStatsRunoff, title="Catchment Mean Runoff")
+        soil_catch = trigger_plot(ArgentinaCatchmentStatsSoilMoisture, title="Catchment Mean Soil Moisture")
 
         context = {
             'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,
