@@ -20,5 +20,5 @@ from hydrostn import views
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/home/1')),
-    path('home/<int:subbasin_id>/', views.HomeView.as_view(), name='home'),
+    path('<str:country>/<int:subbasin_id>/', views.HomeView.as_view(), name='home'),
 ]

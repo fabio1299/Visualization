@@ -8,12 +8,16 @@ class gd_admin_db:
             return 'default'
         if model._meta.app_label == 'argentina':
             return 'argentina_01min'
+        if model._meta.app_label == 'peru':
+            return 'peru_01min'
 
     def db_for_write(self, model, **hints):
         if model._meta.app_label == 'wbm_viz':
             return 'default'
         if model._meta.app_label == 'argentina':
             return 'argentina_01min'
+        if model._meta.app_label == 'peru':
+            return 'peru_01min'
 
     # def allow_relation(self, obj1, obj2, **hints):
     #     db_list = ('default', 'argentina_01min')
