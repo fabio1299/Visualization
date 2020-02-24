@@ -1,26 +1,41 @@
 from django.shortcuts import render
 from django.views import View
-from .models import ArgentinaHydrostn30Subbasin, ArgentinaHydrostn30Streamline, ArgentinaCatchmentStatsEvapotranspiration, \
-    ArgentinaCatchmentStatsRunoff, ArgentinaCatchmentStatsPrecipitation, ArgentinaCatchmentStatsSoilMoisture, ArgentinaCatchmentBasins, \
-    ArgentinaCatchmentStatsAirTemperature, ArgentinaSubbasinAirTemperatureMonthly, ArgentinaSubbasinEvapotranspirationMonthly, \
-    ArgentinaSubbasinPrecipitationMonthly, ArgentinaSubbasinRunoffMonthly, ArgentinaSubbasinSoilMoistureMonthly, ArgentinaConfluenceDischargeMonthly
+
+from .models import ArgentinaHydrostn30Subbasin, ArgentinaHydrostn30Streamline, \
+    ArgentinaCatchmentStatsEvapotranspiration, \
+    ArgentinaCatchmentStatsRunoff, ArgentinaCatchmentStatsPrecipitation, ArgentinaCatchmentStatsSoilMoisture, \
+    ArgentinaCatchmentBasins, \
+    ArgentinaCatchmentStatsAirTemperature, ArgentinaSubbasinAirTemperatureMonthly, \
+    ArgentinaSubbasinEvapotranspirationMonthly, \
+    ArgentinaSubbasinPrecipitationMonthly, ArgentinaSubbasinRunoffMonthly, ArgentinaSubbasinSoilMoistureMonthly, \
+    ArgentinaConfluenceDischargeMonthly
+
+from .models import PeruHydrostn30Subbasin, PeruHydrostn30Streamline, PeruCatchmentStatsEvapotranspiration, \
+    PeruCatchmentStatsRunoff, PeruCatchmentStatsPrecipitation, PeruCatchmentStatsSoilMoisture, PeruCatchmentBasins, \
+    PeruCatchmentStatsAirTemperature, PeruSubbasinAirTemperatureMonthly, PeruSubbasinEvapotranspirationMonthly, \
+    PeruSubbasinPrecipitationMonthly, PeruSubbasinRunoffMonthly, PeruSubbasinSoilMoistureMonthly, \
+    PeruConfluenceDischargeMonthly
+
 from . import geometry, db_routines
 from .tasks import plot_queryset, my_task
 
-SUBBASIN = {'argentina': ArgentinaHydrostn30Subbasin}
-STREAMLINE = {'argentina':ArgentinaHydrostn30Streamline}
-CATCHMENT_BASINS = {'argentina': ArgentinaCatchmentBasins}
-DISCHARGE = {'argentina': ArgentinaConfluenceDischargeMonthly}
-CATCHMENT_STATS_EVAP = {'argentina': ArgentinaCatchmentStatsEvapotranspiration}
-CATCHMENT_STATS_RUNOFF = {'argentina': ArgentinaCatchmentStatsRunoff}
-CATCHMENT_STATS_PRECIP = {'argentina': ArgentinaCatchmentStatsPrecipitation}
-CATCHMENT_STATS_SOIL = {'argentina': ArgentinaCatchmentStatsSoilMoisture}
-CATCHMENT_STATS_AIR = {'argentina': ArgentinaCatchmentStatsAirTemperature}
-SUBBASIN_STATS_EVAP = {'argentina': ArgentinaSubbasinEvapotranspirationMonthly}
-SUBBASIN_STATS_RUNOFF = {'argentina': ArgentinaSubbasinRunoffMonthly}
-SUBBASIN_STATS_PRECIP = {'argentina': ArgentinaSubbasinPrecipitationMonthly}
-SUBBASIN_STATS_SOIL = {'argentina': ArgentinaSubbasinSoilMoistureMonthly}
-SUBBASIN_STATS_AIR = {'argentina': ArgentinaSubbasinAirTemperatureMonthly}
+SUBBASIN = {'argentina': ArgentinaHydrostn30Subbasin, 'peru': PeruHydrostn30Subbasin}
+STREAMLINE = {'argentina': ArgentinaHydrostn30Streamline, 'peru': PeruHydrostn30Streamline}
+CATCHMENT_BASINS = {'argentina': ArgentinaCatchmentBasins, 'peru': PeruCatchmentBasins}
+DISCHARGE = {'argentina': ArgentinaConfluenceDischargeMonthly, 'peru': PeruConfluenceDischargeMonthly}
+CATCHMENT_STATS_EVAP = {'argentina': ArgentinaCatchmentStatsEvapotranspiration,
+                        'peru': PeruCatchmentStatsEvapotranspiration}
+CATCHMENT_STATS_RUNOFF = {'argentina': ArgentinaCatchmentStatsRunoff, 'peru': PeruCatchmentStatsRunoff}
+CATCHMENT_STATS_PRECIP = {'argentina': ArgentinaCatchmentStatsPrecipitation, 'peru': PeruCatchmentStatsPrecipitation}
+CATCHMENT_STATS_SOIL = {'argentina': ArgentinaCatchmentStatsSoilMoisture, 'peru': PeruCatchmentStatsSoilMoisture}
+CATCHMENT_STATS_AIR = {'argentina': ArgentinaCatchmentStatsAirTemperature, 'peru': PeruCatchmentStatsAirTemperature}
+SUBBASIN_STATS_EVAP = {'argentina': ArgentinaSubbasinEvapotranspirationMonthly,
+                       'peru': PeruSubbasinEvapotranspirationMonthly}
+SUBBASIN_STATS_RUNOFF = {'argentina': ArgentinaSubbasinRunoffMonthly, 'peru': PeruSubbasinRunoffMonthly}
+SUBBASIN_STATS_PRECIP = {'argentina': ArgentinaSubbasinPrecipitationMonthly, 'peru': PeruSubbasinPrecipitationMonthly}
+SUBBASIN_STATS_SOIL = {'argentina': ArgentinaSubbasinSoilMoistureMonthly, 'peru': PeruSubbasinSoilMoistureMonthly}
+SUBBASIN_STATS_AIR = {'argentina': ArgentinaSubbasinAirTemperatureMonthly, 'peru': PeruSubbasinAirTemperatureMonthly}
+
 
 class HomeView(View):
     template_name = 'home.html'
