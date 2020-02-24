@@ -16,7 +16,7 @@
 
     <div class="row justify-content-center">
 
-        <h2>Argentina Basin {{ subbasin.id }} & Catchment</h2>
+        <h2>{{ country }} Basin {{ subbasin.id }} & Catchment</h2>
 
     </div>
 
@@ -251,7 +251,7 @@
 
     {#  Leaflet  #}
     <script type="text/javascript">
-        const argentina_coords = [-38.4161, -63.6167]
+        {#const argentina_coords = [-38.4161, -63.6167]#}
 
         function catchment_style(feature) {
             return {
@@ -294,8 +294,7 @@
     <script type="text/javascript">
 
         {#Invalid Target#}
-        if ({{ subbasin.next_station }} == 0
-        )
+        if ({{ subbasin.next_station }} == 0)
         {
             document.getElementById("next-button").disabled = true;
         }
@@ -304,7 +303,7 @@
         }
 
         document.getElementById("random-button").onclick = function () {
-            const random_num = Math.floor(Math.random() * Math.floor(48777));
+            const random_num = Math.floor(Math.random() * Math.floor({{ subbasin_count }}));
 
             location.href = `../${random_num}`
         }
@@ -317,10 +316,16 @@
             Plotly.react(resultElement, graphs, {});
         }
 
+        function onSuccessDefault(progressBarElement, progressBarMessageElement) {
+            {#progressBarElement.style.backgroundColor = '#76ce60';#}
+            progressBarMessageElement.innerHTML = "";
+        }
+
         function plot_async(progressUrl, result_id, bar_id, bar_message) {
             // vanilla JS version
             CeleryProgressBar.initProgressBar(progressUrl, {
                 onResult: customResult,
+                onSuccess: onSuccessDefault,
                 resultElementId: result_id,
                 progressBarId: bar_id,
                 progressBarMessageId: bar_message,

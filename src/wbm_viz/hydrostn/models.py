@@ -1,232 +1,115 @@
-from django.contrib.gis.db import models
-from django.db import connections
-from django.contrib.gis.geos import GEOSGeometry
+from .models_abstract import *
 
-class Hydrostn30Subbasin(models.Model):
-    id = models.IntegerField(primary_key=True)
-    record_name = models.CharField(max_length=12, blank=True, null=True)
-    grid_value = models.IntegerField(blank=True, null=True)
-    grid_area = models.FloatField(blank=True, null=True)
-    grid_percent = models.FloatField(blank=True, null=True)
-    perimeter = models.FloatField(blank=True, null=True)
-    vertex_num = models.IntegerField(blank=True, null=True)
-    basin_id = models.IntegerField(blank=True, null=True)
-    stream_order = models.IntegerField(blank=True, null=True)
-    from_x_coord = models.FloatField(blank=True, null=True)
-    from_y_coord = models.FloatField(blank=True, null=True)
-    to_x_coord = models.FloatField(blank=True, null=True)
-    to_y_coord = models.FloatField(blank=True, null=True)
-    cell_id = models.IntegerField(blank=True, null=True)
-    basin_name = models.CharField(max_length=32, blank=True, null=True)
-    order = models.IntegerField(blank=True, null=True)
-    color = models.IntegerField(blank=True, null=True)
-    number_of_cells = models.IntegerField(blank=True, null=True)
-    stn_mainstem_length = models.FloatField(blank=True, null=True)
-    stn_catchment_area = models.FloatField(blank=True, null=True)
-    stn_interstation_area = models.FloatField(blank=True, null=True)
-    next_station = models.IntegerField(blank=True, null=True)
-    geom = models.GeometryField(srid=0, blank=True, null=True)
+# Argentina
+class ArgentinaHydrostn30Subbasin(Hydrostn30Subbasin):
+    class Meta(Hydrostn30Subbasin.Meta):
+        app_label = 'argentina'
 
-    class Meta:
-        managed = False  # Created from a view. Don't remove.
-        db_table = 'hydrostn30_subbasin'
-        app_label = 'hydrostn'
+class ArgentinaHydrostn30Streamline(Hydrostn30Streamline):
+    class Meta(Hydrostn30Streamline.Meta):
+        app_label = 'argentina'
 
-    @property
-    def get_catchment(self):
-        """Return upstream catchment as geojson"""
-        with connections['argentina_01min'].cursor() as cursor:
+class ArgentinaCatchmentBasins(CatchmentBasins):
+    class Meta(CatchmentBasins.Meta):
+        app_label = 'argentina'
 
-            cursor.callproc('get_catchment', (self.id,))
+class ArgentinaCatchmentStatsAirTemperature(CatchmentStatsAirTemperature):
+    class Meta(CatchmentStatsAirTemperature.Meta):
+        app_label = 'argentina'
 
-            # return from db is in hexadecimal representation
-            hex_wkb = cursor.fetchone()[0]
+class ArgentinaCatchmentStatsEvapotranspiration(CatchmentStatsEvapotranspiration):
+    class Meta(CatchmentStatsEvapotranspiration.Meta):
+        app_label = 'argentina'
 
-            # convert to polygon
-            polygon = GEOSGeometry(hex_wkb)
-            return polygon.geojson
+class ArgentinaCatchmentStatsPrecipitation(CatchmentStatsPrecipitation):
+    class Meta(CatchmentStatsPrecipitation.Meta):
+        app_label = 'argentina'
 
-class Hydrostn30Streamline(models.Model):
-    id = models.IntegerField(primary_key=True)
-    basin_id = models.IntegerField(blank=True, null=True)
-    stream_order = models.IntegerField(blank=True, null=True)
-    color = models.IntegerField(blank=True, null=True)
-    next_station = models.IntegerField(blank=True, null=True)
-    geom = models.GeometryField(srid=0, blank=True, null=True)
+class ArgentinaCatchmentStatsRunoff(CatchmentStatsRunoff):
+    class Meta(CatchmentStatsRunoff.Meta):
+        app_label = 'argentina'
 
-    class Meta:
-        managed = False  # Created from a view. Don't remove.
-        db_table = 'hydrostn30_streamline'
+class ArgentinaCatchmentStatsSoilMoisture(CatchmentStatsSoilMoisture):
+    class Meta(CatchmentStatsSoilMoisture.Meta):
+        app_label = 'argentina'
 
-class CatchmentBasins(models.Model):
-    sample_id = models.IntegerField(primary_key=True)
-    basins = models.TextField(blank=True, null=True)  # This field type is a guess.
-    catchment = models.GeometryField(srid=0, blank=True, null=True)
-    streamlines = models.GeometryField(srid=0, blank=True, null=True)
+class ArgentinaConfluenceDischargeMonthly(ConfluenceDischargeMonthly):
+    class Meta(ConfluenceDischargeMonthly.Meta):
+        app_label = 'argentina'
 
+class ArgentinaSubbasinAirTemperatureMonthly(SubbasinAirTemperatureMonthly):
+    class Meta(SubbasinAirTemperatureMonthly.Meta):
+        app_label = 'argentina'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_basins'
+class ArgentinaSubbasinEvapotranspirationMonthly(SubbasinEvapotranspirationMonthly):
+    class Meta(SubbasinEvapotranspirationMonthly.Meta):
+        app_label = 'argentina'
 
+class ArgentinaSubbasinPrecipitationMonthly(SubbasinPrecipitationMonthly):
+    class Meta(SubbasinPrecipitationMonthly.Meta):
+        app_label = 'argentina'
 
-class CatchmentStatsAirTemperature(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-    mean_zonal_mean = models.FloatField(blank=True, null=True)
-    mean_zonal_min = models.FloatField(blank=True, null=True)
-    mean_zonal_max = models.FloatField(blank=True, null=True)
+class ArgentinaSubbasinRunoffMonthly(SubbasinRunoffMonthly):
+    class Meta(SubbasinRunoffMonthly.Meta):
+        app_label = 'argentina'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_stats_air_temperature'
+class ArgentinaSubbasinSoilMoistureMonthly(SubbasinSoilMoistureMonthly):
+    class Meta(SubbasinSoilMoistureMonthly.Meta):
+        app_label = 'argentina'
 
+#Peru
+class PeruHydrostn30Subbasin(Hydrostn30Subbasin):
+    class Meta(Hydrostn30Subbasin.Meta):
+        app_label = 'peru'
 
-class CatchmentStatsEvapotranspiration(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-    mean_zonal_mean = models.FloatField(blank=True, null=True)
-    mean_zonal_min = models.FloatField(blank=True, null=True)
-    mean_zonal_max = models.FloatField(blank=True, null=True)
+class PeruHydrostn30Streamline(Hydrostn30Streamline):
+    class Meta(Hydrostn30Streamline.Meta):
+        app_label = 'peru'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_stats_evapotranspiration'
+class PeruCatchmentBasins(CatchmentBasins):
+    class Meta(CatchmentBasins.Meta):
+        app_label = 'peru'
 
-class CatchmentStatsPrecipitation(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-    mean_zonal_mean = models.FloatField(blank=True, null=True)
-    mean_zonal_min = models.FloatField(blank=True, null=True)
-    mean_zonal_max = models.FloatField(blank=True, null=True)
+class PeruCatchmentStatsAirTemperature(CatchmentStatsAirTemperature):
+    class Meta(CatchmentStatsAirTemperature.Meta):
+        app_label = 'peru'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_stats_precipitation'
+class PeruCatchmentStatsEvapotranspiration(CatchmentStatsEvapotranspiration):
+    class Meta(CatchmentStatsEvapotranspiration.Meta):
+        app_label = 'peru'
 
+class PeruCatchmentStatsPrecipitation(CatchmentStatsPrecipitation):
+    class Meta(CatchmentStatsPrecipitation.Meta):
+        app_label = 'peru'
 
-class CatchmentStatsRunoff(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-    mean_zonal_mean = models.FloatField(blank=True, null=True)
-    mean_zonal_min = models.FloatField(blank=True, null=True)
-    mean_zonal_max = models.FloatField(blank=True, null=True)
+class PeruCatchmentStatsRunoff(CatchmentStatsRunoff):
+    class Meta(CatchmentStatsRunoff.Meta):
+        app_label = 'peru'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_stats_runoff'
+class PeruCatchmentStatsSoilMoisture(CatchmentStatsSoilMoisture):
+    class Meta(CatchmentStatsSoilMoisture.Meta):
+        app_label = 'peru'
 
+class PeruConfluenceDischargeMonthly(ConfluenceDischargeMonthly):
+    class Meta(ConfluenceDischargeMonthly.Meta):
+        app_label = 'peru'
 
-class CatchmentStatsSoilMoisture(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-    mean_zonal_mean = models.FloatField(blank=True, null=True)
-    mean_zonal_min = models.FloatField(blank=True, null=True)
-    mean_zonal_max = models.FloatField(blank=True, null=True)
+class PeruSubbasinAirTemperatureMonthly(SubbasinAirTemperatureMonthly):
+    class Meta(SubbasinAirTemperatureMonthly.Meta):
+        app_label = 'peru'
 
-    class Meta:
-        managed = False
-        db_table = 'catchment_stats_soil_moisture'
+class PeruSubbasinEvapotranspirationMonthly(SubbasinEvapotranspirationMonthly):
+    class Meta(SubbasinEvapotranspirationMonthly.Meta):
+        app_label = 'peru'
 
+class PeruSubbasinPrecipitationMonthly(SubbasinPrecipitationMonthly):
+    class Meta(SubbasinPrecipitationMonthly.Meta):
+        app_label = 'peru'
 
-class ConfluenceDischargeMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    month = models.IntegerField(db_column='Month', blank=True, null=True)  # Field name made lowercase.
-    date = models.CharField(db_column='Date', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    discharge = models.FloatField(db_column='Discharge', blank=True, null=True)  # Field name made lowercase.
-    model_name = models.TextField(blank=True, null=True)
+class PeruSubbasinRunoffMonthly(SubbasinRunoffMonthly):
+    class Meta(SubbasinRunoffMonthly.Meta):
+        app_label = 'peru'
 
-    class Meta:
-        managed = False
-        db_table = 'confluence_discharge_monthly'
-
-class SubbasinAirTemperatureMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    month = models.IntegerField(blank=True, null=True)
-    zonal_mean = models.FloatField(blank=True, null=True)
-    zonal_min = models.FloatField(blank=True, null=True)
-    zonal_max = models.FloatField(blank=True, null=True)
-    zone_area = models.FloatField(blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'subbasin_air_temperature_monthly'
-
-
-class SubbasinEvapotranspirationMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    month = models.IntegerField(blank=True, null=True)
-    zonal_mean = models.FloatField(blank=True, null=True)
-    zonal_min = models.FloatField(blank=True, null=True)
-    zonal_max = models.FloatField(blank=True, null=True)
-    zone_area = models.FloatField(blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'subbasin_evapotranspiration_monthly'
-
-
-class SubbasinPrecipitationMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    month = models.IntegerField(blank=True, null=True)
-    zonal_mean = models.FloatField(blank=True, null=True)
-    zonal_min = models.FloatField(blank=True, null=True)
-    zonal_max = models.FloatField(blank=True, null=True)
-    zone_area = models.FloatField(blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'subbasin_precipitation_monthly'
-
-
-class SubbasinRunoffMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    month = models.IntegerField(blank=True, null=True)
-    zonal_mean = models.FloatField(blank=True, null=True)
-    zonal_min = models.FloatField(blank=True, null=True)
-    zonal_max = models.FloatField(blank=True, null=True)
-    zone_area = models.FloatField(blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'subbasin_runoff_monthly'
-
-
-class SubbasinSoilMoistureMonthly(models.Model):
-    subbasin_id = models.IntegerField(blank=True, null=True)
-    date = models.CharField(max_length=10, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    month = models.IntegerField(blank=True, null=True)
-    zonal_mean = models.FloatField(blank=True, null=True)
-    zonal_min = models.FloatField(blank=True, null=True)
-    zonal_max = models.FloatField(blank=True, null=True)
-    zone_area = models.FloatField(blank=True, null=True)
-    model_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'subbasin_soil_moisture_monthly'
-
-
-
-
-
-
+class PeruSubbasinSoilMoistureMonthly(SubbasinSoilMoistureMonthly):
+    class Meta(SubbasinSoilMoistureMonthly.Meta):
+        app_label = 'peru'

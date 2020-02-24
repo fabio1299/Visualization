@@ -1,25 +1,24 @@
-create function catchment_precipitation(integer)
-    returns TABLE(subbasin_id integer, date character varying, model_name text, mean_zonal_mean double precision, mean_zonal_min double precision, mean_zonal_max double precision)
+create or replace function catchment_precipitation(integer)
+returns TABLE(sample_id integer, date character varying, model_name text, mean_zonal_mean double precision, mean_zonal_min double precision, mean_zonal_max double precision)
     language plpgsql
 as
 $$
     #variable_conflict use_column
     DECLARE
-        subbasin_id alias for $1;
+        basin_id alias for $1;
     BEGIN
-         RETURN QUERY SELECT subbasin_id as subbasin_id,
-                             "Date",
-                             "model_name",
+         RETURN QUERY SELECT basin_id as sample_id,
+                             date,
+                             model_name,
 --                           Weighted Average by Subbasin Area
-                             SUM("ZonalMean" * "ZoneArea")/SUM("ZoneArea") as mean_zonal_mean,
-                             SUM("ZonalMin" * "ZoneArea")/SUM("ZoneArea") as mean_zonal_min,
-                             SUM("ZonalMax" * "ZoneArea")/SUM("ZoneArea") as mean_zonal_max
-         FROM precipitation_subbasin_monthly
-         WHERE "SampleID" in (SELECT id FROM get_catchment_table(subbasin_id))
-         GROUP BY "Date" ,"model_name"
-         ORDER BY "Date";
-END;
+                             SUM(zonal_mean * zone_area)/SUM(zone_area) as mean_zonal_mean,
+                             SUM(zonal_min * zone_area)/SUM(zone_area) as mean_zonal_min,
+                             SUM(zonal_max * zone_area)/SUM(zone_area) as mean_zonal_max
+         FROM subbasin_precipitation_monthly
+         WHERE subbasin_id in (SELECT unnest(basins) from catchment_basins where sample_id = $1)
+         GROUP BY date ,model_name
+         ORDER BY date;
+END
 $$;
 
-alter function catchment_precipitation(integer) owner to danielv;
 
