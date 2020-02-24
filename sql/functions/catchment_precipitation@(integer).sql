@@ -15,7 +15,7 @@ $$
                              SUM(zonal_min * zone_area)/SUM(zone_area) as mean_zonal_min,
                              SUM(zonal_max * zone_area)/SUM(zone_area) as mean_zonal_max
          FROM subbasin_precipitation_monthly
-         WHERE subbasin_id in (SELECT id FROM get_catchment_table(basin_id))
+         WHERE subbasin_id in (SELECT unnest(basins) from catchment_basins where sample_id = $1)
          GROUP BY date ,model_name
          ORDER BY date;
 END

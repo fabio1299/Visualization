@@ -78,17 +78,48 @@ create table catchment_stats_soil_moisture
 create index catchment_stats_soil_moisture_subbasin_id_idx
 	on catchment_stats_soil_moisture (subbasin_id);
 
+
+
 do $$
 begin
 for r in 1..(SELECT COUNT(*) FROM hydrostn30_subbasin) loop
     insert into catchment_stats_air_temperature SELECT * FROM catchment_air_temperature(r);
+end loop;
+end;
+$$;
+
+do $$
+begin
+for r in 1..(SELECT COUNT(*) FROM hydrostn30_subbasin) loop
     insert into catchment_stats_evapotranspiration SELECT * FROM catchment_evapotranspiration(r);
+end loop;
+end;
+$$;
+
+do $$
+begin
+for r in 1..(SELECT COUNT(*) FROM hydrostn30_subbasin) loop
     insert into catchment_stats_precipitation SELECT * FROM catchment_precipitation(r);
+end loop;
+end;
+$$;
+
+do $$
+begin
+for r in 1..(SELECT COUNT(*) FROM hydrostn30_subbasin) loop
     insert into catchment_stats_runoff SELECT * FROM catchment_runoff(r);
+end loop;
+end;
+$$;
+
+do $$
+begin
+for r in 1..(SELECT COUNT(*) FROM hydrostn30_subbasin) loop
     insert into catchment_stats_soil_moisture SELECT * FROM catchment_soil_moisture(r);
 end loop;
 end;
 $$;
+
 
 
 
