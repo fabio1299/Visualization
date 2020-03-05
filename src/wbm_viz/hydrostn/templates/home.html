@@ -16,19 +16,71 @@
 
     <div class="row justify-content-center">
 
-        <h2>{{ country }} Basin {{ subbasin.id }} & Catchment</h2>
+        {#        <h1>{{ country }} Basin {{ subbasin.id }} & Catchment</h1>#}
 
     </div>
 
-    <div class="map" id="subbasin_map">
-        {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
+    <div class="row px-3">
+
+        <div class="map col-lg-10 " id="subbasin_map">
+            {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
+        </div>
+
+        <div class="col-lg-2">
+            <table class="table table-responsive">
+                <tbody>
+                <tr>
+                    <th scope="row">Basin Name</th>
+                    <td>{{ subbasin.basin_name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Station ID</th>
+                    <td>{{ subbasin.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Next Station</th>
+                    <td>{{ subbasin.next_station }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Stream Order</th>
+                    <td>{{ subbasin.stream_order }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Number of Cells</th>
+                    <td>{{ subbasin.number_of_cells }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Grid Area</th>
+                    <td>{{ subbasin.grid_area }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Perimeter</th>
+                    <td>{{ subbasin.perimeter }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Mainstem Length</th>
+                    <td>{{ subbasin.stn_mainstem_length }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Catchment Area</th>
+                    <td>{{ subbasin.stn_catchment_area }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Interstation Area</th>
+                    <td>{{ subbasin.stn_interstation_area }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+
     <hr>
 
 
-    <div class="row">
+    <div class="row px-1">
         <div class="col-lg-6 ">
-            <button class="btn btn-primary btn-block" id="next-button">Next DownStream Subbasin</button>
+            <button class="btn btn-primary btn-block" id="next-button">Next Upstream Subbasin</button>
         </div>
 
         <div class="col-lg-6 justify-content-center">
@@ -40,7 +92,7 @@
 
 
     <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-discharge-tab" data-toggle="tab" href="#nav-discharge"
                role="tab">Discharge</a>
             <a class="nav-item nav-link" id="nav-air-tab" data-toggle="tab" href="#nav-air" role="tab">Air
@@ -74,7 +126,20 @@
 
 
         <div class="tab-pane" id="nav-air" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='air-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div id="air-basin-message">Generating Air Temperature Plot...</div>
+                    <div id="air-basin-plot" class="chart"></div>
 
+
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class='progress-wrapper'>
@@ -90,25 +155,24 @@
             </div>
 
 
+        </div>
+
+        <div class="tab-pane" id="nav-evap" role="tabpanel">
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class='progress-wrapper'>
-                        <div id='air-basin-bar' class='progress-bar invisible'
+                        <div id='evap-basin-bar' class='progress-bar invisible'
                              style="background-color: #68a9ef; width: 0%;">
                             &nbsp;
                         </div>
                     </div>
-                    <div id="air-basin-message">Generating Air Temperature Plot...</div>
-                    <div id="air-basin-plot" class="chart"></div>
+                    <div id="evap-basin-message">Generating Evapotranspiration Plot...</div>
+                    <div id="evap-basin-plot" class="chart"></div>
 
 
                 </div>
             </div>
-
-
-        </div>
-
-        <div class="tab-pane" id="nav-evap" role="tabpanel">
             <div class="row">
                 <div class="col-lg-12">
                     <div class='progress-wrapper'>
@@ -120,25 +184,24 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class='progress-wrapper'>
-                        <div id='evap-basin-bar' class='progress-bar invisible'
-                             style="background-color: #68a9ef; width: 0%;">
-                            &nbsp;
-                        </div>
-                    </div>
-                    <div id="evap-basin-message">Generating Air Temperature Plot...</div>
-                    <div id="evap-basin-plot" class="chart"></div>
-
-
-                </div>
-            </div>
 
         </div>
 
         <div class="tab-pane" id="nav-precip" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='precip-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div id="precip-basin-message">Generating Precipitation Plot...</div>
+                    <div id="precip-basin-plot" class="chart"></div>
 
+
+                </div>
+            </div>
             <div class="row">
 
                 <div class="col-lg-12">
@@ -154,24 +217,22 @@
             </div>
 
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class='progress-wrapper'>
-                        <div id='precip-basin-bar' class='progress-bar invisible'
-                             style="background-color: #68a9ef; width: 0%;">
-                            &nbsp;
-                        </div>
-                    </div>
-                    <div id="precip-basin-message">Generating Air Temperature Plot...</div>
-                    <div id="precip-basin-plot" class="chart"></div>
-
-
-                </div>
-            </div>
         </div>
 
         <div class="tab-pane" id="nav-runoff" role="tabpanel">
+            <div class="row">
 
+                <div class="col-lg-12">
+
+                    <div class='progress-wrapper'>
+                        <div id='runoff-basin-bar' class='progress-bar invisible'
+                             style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="runoff-basin-message">Generating Runoff Plot...</div>
+                    <div id="runoff-basin-plot" class="chart"></div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-lg-12">
@@ -188,38 +249,9 @@
             </div>
 
 
-            <div class="row">
-
-                <div class="col-lg-12">
-
-                    <div class='progress-wrapper'>
-                        <div id='runoff-basin-bar' class='progress-bar invisible'
-                             style="background-color: #68a9ef; width: 0%;">
-                        </div>
-                    </div>
-                    <div id="runoff-basin-message">Generating Precipitation Plot...</div>
-                    <div id="runoff-basin-plot" class="chart"></div>
-                </div>
-            </div>
-
         </div>
 
         <div class="tab-pane" id="nav-soil" role="tabpanel">
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class='progress-wrapper'>
-                        <div id='soil-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
-                        </div>
-                    </div>
-                    <div id="soil-message">Generating Soil Moisture Plot...</div>
-                    <div id="soil-plot" class="chart"></div>
-
-                </div>
-
-            </div>
-
-
             <div class="row">
 
                 <div class="col-lg-12">
@@ -233,6 +265,19 @@
                     <div id="soil-basin-plot" class="chart"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class='progress-wrapper'>
+                        <div id='soil-bar' class='progress-bar invisible' style="background-color: #68a9ef; width: 0%;">
+                        </div>
+                    </div>
+                    <div id="soil-message">Generating Soil Moisture Plot...</div>
+                    <div id="soil-plot" class="chart"></div>
+
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -287,14 +332,31 @@
 
             map.fitWorld();
             map.fitBounds(subbasin_catchment.getBounds());
+
+
+            {#map.on('click', function(e) {#}
+            {#alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)});#}
+
+            var popup = L.popup();
+
+            function onMapClick(e) {
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent(e.latlng.toString())
+                    .openOn(map);
+            }
+
+            map.on('click', onMapClick);
         }
+
     </script>
 
     {# button control#}
     <script type="text/javascript">
 
         {#Invalid Target#}
-        if ({{ subbasin.next_station }} == 0)
+        if ({{ subbasin.next_station }} == 0
+        )
         {
             document.getElementById("next-button").disabled = true;
         }
@@ -369,37 +431,35 @@
 
         {# Force Plots to redo autolayout when switching to tabs #}
 
-        $('.nav-tabs a[href="#nav-discharge"]').on('shown.bs.tab', function(){
-            Plotly.relayout('discharge-plot',{});
+        $('.nav-tabs a[href="#nav-discharge"]').on('shown.bs.tab', function () {
+            Plotly.relayout('discharge-plot', {});
         });
 
-        $('.nav-tabs a[href="#nav-air"]').on('shown.bs.tab', function(){
-            Plotly.relayout('air-plot',{});
-            Plotly.relayout('air-basin-plot',{});
+        $('.nav-tabs a[href="#nav-air"]').on('shown.bs.tab', function () {
+            Plotly.relayout('air-plot', {});
+            Plotly.relayout('air-basin-plot', {});
         });
 
-         $('.nav-tabs a[href="#nav-evap"]').on('shown.bs.tab', function(){
-            Plotly.relayout('evap-plot',{});
-            Plotly.relayout('evap-basin-plot',{});
+        $('.nav-tabs a[href="#nav-evap"]').on('shown.bs.tab', function () {
+            Plotly.relayout('evap-plot', {});
+            Plotly.relayout('evap-basin-plot', {});
         });
 
-          $('.nav-tabs a[href="#nav-precip"]').on('shown.bs.tab', function(){
-            Plotly.relayout('precip-plot',{});
-            Plotly.relayout('precip-basin-plot',{});
+        $('.nav-tabs a[href="#nav-precip"]').on('shown.bs.tab', function () {
+            Plotly.relayout('precip-plot', {});
+            Plotly.relayout('precip-basin-plot', {});
         });
 
-          $('.nav-tabs a[href="#nav-runoff"]').on('shown.bs.tab', function(){
-            Plotly.relayout('runoff-plot',{});
-            Plotly.relayout('runoff-basin-plot',{});
+        $('.nav-tabs a[href="#nav-runoff"]').on('shown.bs.tab', function () {
+            Plotly.relayout('runoff-plot', {});
+            Plotly.relayout('runoff-basin-plot', {});
         });
 
-          $('.nav-tabs a[href="#nav-soil"]').on('shown.bs.tab', function(){
-            Plotly.relayout('soil-plot',{});
-            Plotly.relayout('soil-basin-plot',{});
+        $('.nav-tabs a[href="#nav-soil"]').on('shown.bs.tab', function () {
+            Plotly.relayout('soil-plot', {});
+            Plotly.relayout('soil-basin-plot', {});
         });
 
     </script>
 
-
 {% endblock %}
-
