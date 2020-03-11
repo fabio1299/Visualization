@@ -36,6 +36,14 @@ SUBBASIN_STATS_PRECIP = {'argentina': ArgentinaSubbasinPrecipitationMonthly, 'pe
 SUBBASIN_STATS_SOIL = {'argentina': ArgentinaSubbasinSoilMoistureMonthly, 'peru': PeruSubbasinSoilMoistureMonthly}
 SUBBASIN_STATS_AIR = {'argentina': ArgentinaSubbasinAirTemperatureMonthly, 'peru': PeruSubbasinAirTemperatureMonthly}
 
+UNITS = {
+    'discharge': 'm<sup>3</sup>/s',
+    'temp': '&#8451;',
+    'evap': 'mm/month',
+    'precip': 'mm/month',
+    'runoff': 'mm/month',
+    'soil': 'mm/month'
+}
 
 class HomeView(View):
     template_name = 'home.html'
@@ -66,29 +74,29 @@ class HomeView(View):
             stream_geom = catch_cache.streamlines
 
         # Plots
-        def trigger_plot(model, title=None, y_param='mean_zonal_mean'):
+        def trigger_plot(model, title=None, units=None, y_param='mean_zonal_mean'):
             qs = model.objects.filter(subbasin_id=subbasin_id).order_by('subbasin_id', 'date')
 
             result = plot_queryset.delay(list(qs.values()), ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
-                                         y_param, title=title)
+                                         y_param, title=title, units=units)
             return result
 
-        discharge = trigger_plot(DISCHARGE[country], y_param='discharge', title='Basin Monthly Discharge')
+        discharge = trigger_plot(DISCHARGE[country], y_param='discharge', title='Basin Monthly Discharge',units=UNITS['discharge'])
 
         evap_basin = trigger_plot(SUBBASIN_STATS_EVAP[country], y_param='zonal_mean',
-                                  title="Basin Mean Evapotranspiration")
+                                  title="Basin Mean Evapotranspiration",units=UNITS['evap'])
         air_basin = trigger_plot(SUBBASIN_STATS_AIR[country], y_param='zonal_mean',
-                                 title="Basin Mean Air Temperature")
+                                 title="Basin Mean Air Temperature",units=UNITS['temp'])
         precip_basin = trigger_plot(SUBBASIN_STATS_PRECIP[country], y_param="zonal_mean",
-                                    title="Basin Mean Precipitation")
-        runoff_basin = trigger_plot(SUBBASIN_STATS_RUNOFF[country], y_param="zonal_mean", title="Basin Mean Runoff")
-        soil_basin = trigger_plot(SUBBASIN_STATS_SOIL[country], y_param="zonal_mean", title="Basin Mean Soil Moisture")
+                                    title="Basin Mean Precipitation",units=UNITS['precip'])
+        runoff_basin = trigger_plot(SUBBASIN_STATS_RUNOFF[country], y_param="zonal_mean", title="Basin Mean Runoff",units=UNITS['runoff'])
+        soil_basin = trigger_plot(SUBBASIN_STATS_SOIL[country], y_param="zonal_mean", title="Basin Mean Soil Moisture", units=UNITS['soil'])
 
-        evap_catch = trigger_plot(CATCHMENT_STATS_EVAP[country], title="Catchment Mean Evapotranspiration")
-        air_catch = trigger_plot(CATCHMENT_STATS_AIR[country], title="Catchment Mean Air Temperature")
-        precip_catch = trigger_plot(CATCHMENT_STATS_PRECIP[country], title="Catchment Mean Precipitation")
-        runoff_catch = trigger_plot(CATCHMENT_STATS_RUNOFF[country], title="Catchment Mean Runoff")
-        soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture")
+        evap_catch = trigger_plot(CATCHMENT_STATS_EVAP[country], title="Catchment Mean Evapotranspiration", units=UNITS['evap'])
+        air_catch = trigger_plot(CATCHMENT_STATS_AIR[country], title="Catchment Mean Air Temperature",units=UNITS['temp'])
+        precip_catch = trigger_plot(CATCHMENT_STATS_PRECIP[country], title="Catchment Mean Precipitation", units=UNITS['precip'])
+        runoff_catch = trigger_plot(CATCHMENT_STATS_RUNOFF[country], title="Catchment Mean Runoff", units=UNITS['runoff'])
+        soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture", units=UNITS['soil'])
 
         context = {'country': country, 'subbasin_count': subbasin_count,
             'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,

@@ -25,7 +25,7 @@ class Hydrostn30Subbasin(models.Model):
     stn_catchment_area = models.FloatField(blank=True, null=True)
     stn_interstation_area = models.FloatField(blank=True, null=True)
     next_station = models.IntegerField(blank=True, null=True)
-    geom = models.GeometryField(srid=0, blank=True, null=True)
+    geom = models.GeometryField(srid=4326, blank=True, null=True)
 
     class Meta:
         managed = False  # Created from a view. Don't remove.

@@ -7,11 +7,11 @@ body {
   overflow-x: hidden;
 }
 
-tr {
-   line-height: 55px;
-   min-height: 55px;
-   height: 55px;
-}
+/*tr {*/
+/*   line-height: 55px;*/
+/*   min-height: 55px;*/
+/*   height: 55px;*/
+/*}*/
 
 #sidebar-wrapper {
   min-height: 100vh;
