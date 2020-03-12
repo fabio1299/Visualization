@@ -1,16 +1,15 @@
 """Celery tasks"""
 from celery import shared_task
-from celery_progress.backend import ProgressRecorder
-
 import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import json
 from django.apps import apps
 
+
 @shared_task(bind=True)
-def plot_queryset(self, model_name, queryset_ids,model_names,y_param,title="title",units="units"):
-    model = apps.get_model('hydrostn',model_name)
+def plot_queryset(self, model_name, queryset_ids, model_names, y_param, title="title", units="units"):
+    model = apps.get_model('hydrostn', model_name)
     queryset = list(model.objects.filter(subbasin_id__in=queryset_ids).order_by('subbasin_id', 'date').values())
     df = pd.DataFrame(queryset)
     fig = go.Figure()
@@ -33,17 +32,3 @@ def plot_queryset(self, model_name, queryset_ids,model_names,y_param,title="titl
     )
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json
-
-
-
-# Test task
-import time
-@shared_task(bind=True)
-def my_task(self, seconds):
-    progress_recorder = ProgressRecorder(self)
-    result = 0
-    for i in range(seconds):
-        time.sleep(1)
-        result += i
-        progress_recorder.set_progress(i + 1, seconds)
-    return result

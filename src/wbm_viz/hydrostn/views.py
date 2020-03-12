@@ -9,21 +9,23 @@ from .models import *
 from . import geometry, db_routines
 from .tasks import plot_queryset
 
+
 class HomeView(View):
+    """Main View displaying map + plots for a particular country-basin"""
+
     template_name = 'home.html'
 
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
 
-        # Map
+        # Map Polygons
         subbasin_count = SUBBASIN[country].objects.count()
         subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
         catch_cache = CATCHMENT_BASINS[country].objects.filter(sample_id=subbasin_id).first()
         stream = STREAMLINE[country].objects.filter(id__in=catch_cache.basins)
 
-        if catch_cache.catchment == None:
+        if catch_cache.catchment == None:  # Geometry not cached in db
 
             # call proc to gen table from DB
-            # catch_table = db_routines.get_catchment_table(subbasin, country, '01min')
             catch_table = db_routines.get_catchment_subbasins(subbasin.id, country, '01min')
 
             # collect all geom
@@ -35,17 +37,20 @@ class HomeView(View):
             stream_geom = stream_collection.unary_union
 
         else:
-            # use cached geometry (too big to compute on fly)
+            # use cached geometry from db (too big to compute on fly)
             catch_geom = catch_cache.catchment
             stream_geom = catch_cache.streamlines
 
-        # Use ID set from discharge (chosen arbitrarily) to filter all statistic tables. We want to same set of IDS for all tables
-        stat_subbasin_ids = list(DISCHARGE[country].objects.filter(subbasin_id=subbasin_id).values_list('subbasin_id', flat=True))
+        # Use ID set from discharge (chosen arbitrarily) to filter all statistic tables.
+        # We can filter all other stat tables with the same set of ids
+        stat_subbasin_ids = list(
+            DISCHARGE[country].objects.filter(subbasin_id=subbasin_id).values_list('subbasin_id', flat=True))
 
-        # Plots
+        # Helper Function for triggering celery plot task
         def trigger_plot(model, title=None, units=None, y_param='mean_zonal_mean'):
             model_name = model.__name__
-            result = plot_queryset.delay(model_name, stat_subbasin_ids, ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
+            result = plot_queryset.delay(model_name, stat_subbasin_ids,
+                                         ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
                                          y_param, title=title, units=units)
             return result
 
@@ -87,6 +92,8 @@ class HomeView(View):
 
 
 def StationRedirect(request, country=None, lat=None, lon=None):
+    """Redirect view taking a lon/lat point at redirecting to correct HomeView"""
+
     subbasin_id = db_routines.get_container_geometry(float(lon), float(lat), SUBBASIN[country])
     if not subbasin_id:
         return (HttpResponse('ERROR: lat={},lon={} not found in {}'.format(lat, lon, country)))
