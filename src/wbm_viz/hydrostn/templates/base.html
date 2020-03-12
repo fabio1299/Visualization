@@ -22,11 +22,11 @@
 
 </head>
 
-<body>
+<body class="row">
   <div class="d-flex container-fluid" id="wrapper">
 
     <!-- Sidebar -->
-    <aside class="bg-light border-right " id="sidebar-wrapper">
+    <aside class="bg-light border-right sidebar col-lg-2" id="sidebar-wrapper">
       <div class="sidebar-heading">Water Based Model Visualization</div>
       <div class="list-group list-group-flush">
           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 1 %}">Argentina</a>
@@ -36,7 +36,7 @@
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
-    <div id="page-content-wrapper">
+    <div id="page-content-wrapper" class="col-lg-10">
 
                 {% block content %}
 

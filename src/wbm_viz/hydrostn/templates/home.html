@@ -7,7 +7,7 @@
 {% block style %}
     <style>
         .map {
-            height: 800px;
+        {#height: 800px;#} height: 800px;
         }
     </style>
 {% endblock %}
@@ -20,15 +20,23 @@
 
     </div>
 
-    <div class="row px-3">
+    <div class="row">
 
-        <div class="map col-lg-10 " id="subbasin_map">
+        <div class="map col-lg-9 " id="subbasin_map">
             {% leaflet_map "subbasin_map" callback="subbasin_map_init" %}
         </div>
 
-        <div class="col-lg-2">
-            <table class="table">
+        <div class="col-lg-3">
+            <table class="table ">
                 <tbody>
+                 <tr>
+                    <td><img src="{% static 'img/reference_basin_square.png' %}" height="90" width="100"></td>
+                    <td class="align-middle">Reference Basin</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'img/catchment_square.png' %}" height="90" width="100"></td>
+                    <td class="align-middle">Downstream</td>
+                </tr>
                 <tr>
                     <th scope="row">Basin Name</th>
                     <td>{{ subbasin.basin_name }}</td>
@@ -75,10 +83,11 @@
     </div>
 
 
+
     <hr>
 
 
-    <div class="row px-1">
+    <div class="row">
         <div class="col-lg-6 ">
             <button class="btn btn-primary btn-block" id="next-button">Next Upstream Subbasin</button>
         </div>
@@ -333,13 +342,13 @@
             map.fitWorld();
             map.fitBounds(subbasin_catchment.getBounds());
 
-            function map_redirect(e){
+            function map_redirect(e) {
                 let ptstr = e.latlng.toString()
                 let lat = e.latlng.lat
                 let lon = e.latlng.lng
-                let url =  '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
-                url = url.replace('1234',lat)
-                url = url.replace('5678',lon)
+                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
+                url = url.replace('1234', lat)
+                url = url.replace('5678', lon)
                 console.log(url)
                 return url
             }
@@ -367,7 +376,10 @@
         if ({{ subbasin.next_station }} == 0
         )
         {
-            document.getElementById("next-button").disabled = true;
+            let next_button = document.getElementById("next-button");
+            next_button.disabled = true;
+            next_button.textContent = "Next Upstream Subbasin (None)"
+
         }
         document.getElementById("next-button").onclick = function () {
             location.href = "../{{ subbasin.next_station }}"
