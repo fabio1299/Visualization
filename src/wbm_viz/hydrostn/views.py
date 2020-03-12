@@ -108,3 +108,22 @@ class HomeView(View):
             'soil_basin_task_id': soil_basin.task_id, 'discharge_task_id': discharge.task_id
         }
         return render(request, self.template_name, context=context)
+
+
+from django.http import HttpResponse
+from .db_routines import  get_container_geometry
+from django.shortcuts import redirect
+
+
+#240
+#http://10.16.12.44:8000/peru/-7.474985/-79.101504
+#http://10.16.12.44:8000/peru?lat=-7.474985&?lon=-79.101504
+
+#28619
+#http://10.16.12.44:8000/argentina/-23.857268/-56.644709
+def StationRedirect(request, country=None, lat=None, lon=None):
+    subbasin_id = get_container_geometry(float(lon), float(lat), SUBBASIN[country])
+    if not subbasin_id:
+        return(HttpResponse('ERROR: lat={},lon={} not found in {}'.format(lat,lon,country)))
+    else:
+        return redirect('home', subbasin_id=subbasin_id.first().id, country=country)

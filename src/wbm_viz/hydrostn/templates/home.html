@@ -333,16 +333,24 @@
             map.fitWorld();
             map.fitBounds(subbasin_catchment.getBounds());
 
-
-            {#map.on('click', function(e) {#}
-            {#alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)});#}
+            function map_redirect(e){
+                let ptstr = e.latlng.toString()
+                let lat = e.latlng.lat
+                let lon = e.latlng.lng
+                let url =  '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
+                url = url.replace('1234',lat)
+                url = url.replace('5678',lon)
+                console.log(url)
+                return url
+            }
 
             var popup = L.popup();
 
             function onMapClick(e) {
                 popup
                     .setLatLng(e.latlng)
-                    .setContent(e.latlng.toString())
+                    {#.setContent(e.latlng.toString())#}
+                    .setContent(map_redirect(e))
                     .openOn(map);
                 console.log(e.latlng)
             }

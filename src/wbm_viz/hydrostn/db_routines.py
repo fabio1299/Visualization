@@ -19,7 +19,7 @@ def get_catchment_table(subbasin,country,res):
 
         return _dict_fetch_all(cursor)
 
-def get_container_geometry(lon, lat, model, field):
+def get_container_geometry(lon, lat, model, field='geom'):
     """Return the model instance with geometry that contains a given point
 
     Ex: get_container_geometry(-62.897611,-27.72973,ArgentinaHydrostn30Subbasin,'geom')
