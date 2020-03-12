@@ -59,7 +59,8 @@ class HomeView(View):
         if catch_cache.catchment == None:
 
             # call proc to gen table from DB
-            catch_table = db_routines.get_catchment_table(subbasin, country, '01min')
+            #catch_table = db_routines.get_catchment_table(subbasin, country, '01min')
+            catch_table = db_routines.get_catchment_subbasins(subbasin.id, country, '01min')
 
             # collect all geom
             catch_collection = geometry.get_geometrycollection(catch_table)
@@ -77,12 +78,11 @@ class HomeView(View):
 
         # Plots
         def trigger_plot(model, title=None, units=None, y_param='mean_zonal_mean'):
-            qs_ids = model.objects.filter(subbasin_id=subbasin_id).order_by('subbasin_id', 'date').values_list('id', flat=True)
+            qs_ids = model.objects.filter(subbasin_id=subbasin_id).values_list('id', flat=True)
             model_name = model.__name__
             result = plot_queryset.delay(model_name, list(qs_ids), ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
                                          y_param, title=title, units=units)
             return result
-        start = timer()
 
         discharge = trigger_plot(DISCHARGE[country], y_param='discharge', title='Basin Monthly Discharge',units=UNITS['discharge'])
 
@@ -100,8 +100,7 @@ class HomeView(View):
         precip_catch = trigger_plot(CATCHMENT_STATS_PRECIP[country], title="Catchment Mean Precipitation", units=UNITS['precip'])
         runoff_catch = trigger_plot(CATCHMENT_STATS_RUNOFF[country], title="Catchment Mean Runoff", units=UNITS['runoff'])
         soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture", units=UNITS['soil'])
-        end = timer()
-        print(end - start, 'seconds')
+
         context = {'country': country, 'subbasin_count': subbasin_count,
             'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,
             'stream_geom': stream_geom, 'evap_catch_task_id': evap_catch.task_id,
@@ -114,7 +113,7 @@ class HomeView(View):
         return render(request, self.template_name, context=context)
 
 from django.http import HttpResponse
-from .db_routines import  get_container_geometry
+from .db_routines import get_container_geometry
 from django.shortcuts import redirect
 
 def StationRedirect(request, country=None, lat=None, lon=None):

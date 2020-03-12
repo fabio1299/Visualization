@@ -10,12 +10,22 @@ def _dict_fetch_all(cursor):
         for row in cursor.fetchall()
     ]
 
+def get_db(country, res):
+    return '{}_{}'.format(country,res)
 
-def get_catchment_table(subbasin,country,res):
-    """Return table of subbasins forming catchment of a given Hydrostn30Subbasin object"""
-    db = '{}_{}'.format(country,res)
+def get_catchment_table(subbasin_id,country,res):
+    """Return table of subbasins forming catchment of a given Hydrostn30Subbasin id"""
+    db = get_db(country, res)
     with connections[db].cursor() as cursor:
-        cursor.callproc('get_catchment_table', (subbasin.id,))
+        cursor.callproc('get_catchment_table', (subbasin_id,))
+
+        return _dict_fetch_all(cursor)
+
+def get_catchment_subbasins(subbasin_id, country, res):
+    """Returns table of just id,geom columns forming catchment of a given Hydrostn30Subbasin id"""
+    db = get_db(country, res)
+    with connections[db].cursor() as cursor:
+        cursor.callproc('get_catchment_subbasins', (subbasin_id,))
 
         return _dict_fetch_all(cursor)
 
