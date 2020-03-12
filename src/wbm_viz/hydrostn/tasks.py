@@ -11,7 +11,7 @@ from django.apps import apps
 @shared_task(bind=True)
 def plot_queryset(self, model_name, queryset_ids,model_names,y_param,title="title",units="units"):
     model = apps.get_model('hydrostn',model_name)
-    queryset = list(model.objects.filter(id__in=queryset_ids).order_by('subbasin_id', 'date').values())
+    queryset = list(model.objects.filter(subbasin_id__in=queryset_ids).order_by('subbasin_id', 'date').values())
     df = pd.DataFrame(queryset)
     fig = go.Figure()
 
