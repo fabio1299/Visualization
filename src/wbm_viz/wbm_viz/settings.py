@@ -29,7 +29,8 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
 INTERNAL_IPS = [
     '127.0.0.1',
-    '10.31.10.24'
+    '10.31.10.24',
+    '10.30.0.20'
 ]
 
 STATICFILES_DIRS = (

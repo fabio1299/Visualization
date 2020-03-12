@@ -17,7 +17,7 @@ from .models import PeruHydrostn30Subbasin, PeruHydrostn30Streamline, PeruCatchm
     PeruConfluenceDischargeMonthly
 
 from . import geometry, db_routines
-from .tasks import plot_queryset, my_task
+from .tasks import plot_queryset
 
 SUBBASIN = {'argentina': ArgentinaHydrostn30Subbasin, 'peru': PeruHydrostn30Subbasin}
 STREAMLINE = {'argentina': ArgentinaHydrostn30Streamline, 'peru': PeruHydrostn30Streamline}
@@ -44,12 +44,12 @@ UNITS = {
     'runoff': 'mm/month',
     'soil': 'mm/month'
 }
+from timeit import default_timer as timer
 
 class HomeView(View):
     template_name = 'home.html'
 
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
-
         # Map
         subbasin_count = SUBBASIN[country].objects.count()
         subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
@@ -57,6 +57,7 @@ class HomeView(View):
         stream = STREAMLINE[country].objects.filter(id__in=catch_cache.basins)
 
         if catch_cache.catchment == None:
+
             # call proc to gen table from DB
             catch_table = db_routines.get_catchment_table(subbasin, country, '01min')
 
@@ -73,13 +74,15 @@ class HomeView(View):
             catch_geom = catch_cache.catchment
             stream_geom = catch_cache.streamlines
 
+
         # Plots
         def trigger_plot(model, title=None, units=None, y_param='mean_zonal_mean'):
-            qs = model.objects.filter(subbasin_id=subbasin_id).order_by('subbasin_id', 'date')
-
-            result = plot_queryset.delay(list(qs.values()), ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
+            qs_ids = model.objects.filter(subbasin_id=subbasin_id).order_by('subbasin_id', 'date').values_list('id', flat=True)
+            model_name = model.__name__
+            result = plot_queryset.delay(model_name, list(qs_ids), ['Terraclimate', 'WBMprist_CRUTSv401', 'WBMprist_GPCCv7'],
                                          y_param, title=title, units=units)
             return result
+        start = timer()
 
         discharge = trigger_plot(DISCHARGE[country], y_param='discharge', title='Basin Monthly Discharge',units=UNITS['discharge'])
 
@@ -97,7 +100,8 @@ class HomeView(View):
         precip_catch = trigger_plot(CATCHMENT_STATS_PRECIP[country], title="Catchment Mean Precipitation", units=UNITS['precip'])
         runoff_catch = trigger_plot(CATCHMENT_STATS_RUNOFF[country], title="Catchment Mean Runoff", units=UNITS['runoff'])
         soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture", units=UNITS['soil'])
-
+        end = timer()
+        print(end - start, 'seconds')
         context = {'country': country, 'subbasin_count': subbasin_count,
             'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,
             'stream_geom': stream_geom, 'evap_catch_task_id': evap_catch.task_id,
@@ -109,18 +113,10 @@ class HomeView(View):
         }
         return render(request, self.template_name, context=context)
 
-
 from django.http import HttpResponse
 from .db_routines import  get_container_geometry
 from django.shortcuts import redirect
 
-
-#240
-#http://10.16.12.44:8000/peru/-7.474985/-79.101504
-#http://10.16.12.44:8000/peru?lat=-7.474985&?lon=-79.101504
-
-#28619
-#http://10.16.12.44:8000/argentina/-23.857268/-56.644709
 def StationRedirect(request, country=None, lat=None, lon=None):
     subbasin_id = get_container_geometry(float(lon), float(lat), SUBBASIN[country])
     if not subbasin_id:

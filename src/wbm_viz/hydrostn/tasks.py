@@ -6,11 +6,13 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import json
+from django.apps import apps
 
 @shared_task(bind=True)
-def plot_queryset(self,queryset_values,model_names,y_param,title="title",units="units"):
-
-    df = pd.DataFrame(queryset_values)
+def plot_queryset(self, model_name, queryset_ids,model_names,y_param,title="title",units="units"):
+    model = apps.get_model('hydrostn',model_name)
+    queryset = list(model.objects.filter(id__in=queryset_ids).values())
+    df = pd.DataFrame(queryset)
     fig = go.Figure()
 
     for i, model in enumerate(model_names):
@@ -31,6 +33,7 @@ def plot_queryset(self,queryset_values,model_names,y_param,title="title",units="
     )
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json
+
 
 
 # Test task
