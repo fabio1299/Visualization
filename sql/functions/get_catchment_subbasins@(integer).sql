@@ -1,5 +1,5 @@
-create function get_catchment_subbasins(integer)
-    returns TABLE("ID" integer, "RecordName" character varying, "GridValue" integer, "GridArea" double precision, "GridPercent" double precision, "Perimeter" double precision, "VertexNum" integer, "BasinID" integer, "StreamOrder" integer, "FromXCoord" double precision, "FromYCoord" double precision, "ToXCoord" double precision, "ToYCoord" double precision, "CellID" integer, "BasinName" character varying, "Order" integer, "Color" integer, "NumberOfCells" integer, "STNMainstemLength" double precision, "STNCatchmentArea" double precision, "STNInterStationArea" double precision, "NextStation" integer, geom geometry)
+create or replace function get_catchment_subbasins(integer)
+    returns TABLE("ID" integer, geom geometry)
     language plpgsql
 as
 $$
@@ -7,7 +7,7 @@ $$
     DECLARE
         subbasin_id alias for $1;
     BEGIN
-         RETURN QUERY SELECT * FROM "HydroSTN30"."Subbasin" WHERE "ID" IN
+         RETURN QUERY SELECT "ID", geom FROM "HydroSTN30"."Subbasin" WHERE "ID" IN
                                                     (SELECT unnest(basins) from catchment_basins where sample_id = subbasin_id);
 END;
 $$;

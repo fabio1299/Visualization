@@ -1,115 +1,144 @@
 from .models_abstract import *
 
+
 # Argentina
 class ArgentinaHydrostn30Subbasin(Hydrostn30Subbasin):
-    class Meta(Hydrostn30Subbasin.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaHydrostn30Streamline(Hydrostn30Streamline):
-    class Meta(Hydrostn30Streamline.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentBasins(CatchmentBasins):
-    class Meta(CatchmentBasins.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentStatsAirTemperature(CatchmentStatsAirTemperature):
-    class Meta(CatchmentStatsAirTemperature.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentStatsEvapotranspiration(CatchmentStatsEvapotranspiration):
-    class Meta(CatchmentStatsEvapotranspiration.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentStatsPrecipitation(CatchmentStatsPrecipitation):
-    class Meta(CatchmentStatsPrecipitation.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentStatsRunoff(CatchmentStatsRunoff):
-    class Meta(CatchmentStatsRunoff.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaCatchmentStatsSoilMoisture(CatchmentStatsSoilMoisture):
-    class Meta(CatchmentStatsSoilMoisture.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaConfluenceDischargeMonthly(ConfluenceDischargeMonthly):
-    class Meta(ConfluenceDischargeMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaSubbasinAirTemperatureMonthly(SubbasinAirTemperatureMonthly):
-    class Meta(SubbasinAirTemperatureMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaSubbasinEvapotranspirationMonthly(SubbasinEvapotranspirationMonthly):
-    class Meta(SubbasinEvapotranspirationMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaSubbasinPrecipitationMonthly(SubbasinPrecipitationMonthly):
-    class Meta(SubbasinPrecipitationMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaSubbasinRunoffMonthly(SubbasinRunoffMonthly):
-    class Meta(SubbasinRunoffMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
+
 
 class ArgentinaSubbasinSoilMoistureMonthly(SubbasinSoilMoistureMonthly):
-    class Meta(SubbasinSoilMoistureMonthly.Meta):
-        app_label = 'argentina'
+    country = 'argentina'
 
-#Peru
+
+#### Peru ####
+
 class PeruHydrostn30Subbasin(Hydrostn30Subbasin):
-    class Meta(Hydrostn30Subbasin.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruHydrostn30Streamline(Hydrostn30Streamline):
-    class Meta(Hydrostn30Streamline.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentBasins(CatchmentBasins):
-    class Meta(CatchmentBasins.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentStatsAirTemperature(CatchmentStatsAirTemperature):
-    class Meta(CatchmentStatsAirTemperature.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentStatsEvapotranspiration(CatchmentStatsEvapotranspiration):
-    class Meta(CatchmentStatsEvapotranspiration.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentStatsPrecipitation(CatchmentStatsPrecipitation):
-    class Meta(CatchmentStatsPrecipitation.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentStatsRunoff(CatchmentStatsRunoff):
-    class Meta(CatchmentStatsRunoff.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruCatchmentStatsSoilMoisture(CatchmentStatsSoilMoisture):
-    class Meta(CatchmentStatsSoilMoisture.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruConfluenceDischargeMonthly(ConfluenceDischargeMonthly):
-    class Meta(ConfluenceDischargeMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruSubbasinAirTemperatureMonthly(SubbasinAirTemperatureMonthly):
-    class Meta(SubbasinAirTemperatureMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruSubbasinEvapotranspirationMonthly(SubbasinEvapotranspirationMonthly):
-    class Meta(SubbasinEvapotranspirationMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruSubbasinPrecipitationMonthly(SubbasinPrecipitationMonthly):
-    class Meta(SubbasinPrecipitationMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruSubbasinRunoffMonthly(SubbasinRunoffMonthly):
-    class Meta(SubbasinRunoffMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
 
 class PeruSubbasinSoilMoistureMonthly(SubbasinSoilMoistureMonthly):
-    class Meta(SubbasinSoilMoistureMonthly.Meta):
-        app_label = 'peru'
+    country = 'peru'
+
+
+# CONSTANTS for filtering correct models
+SUBBASIN = {'argentina': ArgentinaHydrostn30Subbasin, 'peru': PeruHydrostn30Subbasin}
+STREAMLINE = {'argentina': ArgentinaHydrostn30Streamline, 'peru': PeruHydrostn30Streamline}
+CATCHMENT_BASINS = {'argentina': ArgentinaCatchmentBasins, 'peru': PeruCatchmentBasins}
+DISCHARGE = {'argentina': ArgentinaConfluenceDischargeMonthly, 'peru': PeruConfluenceDischargeMonthly}
+CATCHMENT_STATS_EVAP = {'argentina': ArgentinaCatchmentStatsEvapotranspiration,
+                        'peru': PeruCatchmentStatsEvapotranspiration}
+CATCHMENT_STATS_RUNOFF = {'argentina': ArgentinaCatchmentStatsRunoff, 'peru': PeruCatchmentStatsRunoff}
+CATCHMENT_STATS_PRECIP = {'argentina': ArgentinaCatchmentStatsPrecipitation, 'peru': PeruCatchmentStatsPrecipitation}
+CATCHMENT_STATS_SOIL = {'argentina': ArgentinaCatchmentStatsSoilMoisture, 'peru': PeruCatchmentStatsSoilMoisture}
+CATCHMENT_STATS_AIR = {'argentina': ArgentinaCatchmentStatsAirTemperature, 'peru': PeruCatchmentStatsAirTemperature}
+SUBBASIN_STATS_EVAP = {'argentina': ArgentinaSubbasinEvapotranspirationMonthly,
+                       'peru': PeruSubbasinEvapotranspirationMonthly}
+SUBBASIN_STATS_RUNOFF = {'argentina': ArgentinaSubbasinRunoffMonthly, 'peru': PeruSubbasinRunoffMonthly}
+SUBBASIN_STATS_PRECIP = {'argentina': ArgentinaSubbasinPrecipitationMonthly, 'peru': PeruSubbasinPrecipitationMonthly}
+SUBBASIN_STATS_SOIL = {'argentina': ArgentinaSubbasinSoilMoistureMonthly, 'peru': PeruSubbasinSoilMoistureMonthly}
+SUBBASIN_STATS_AIR = {'argentina': ArgentinaSubbasinAirTemperatureMonthly, 'peru': PeruSubbasinAirTemperatureMonthly}
+
+UNITS = {
+    'discharge': 'm<sup>3</sup>/s',
+    'temp': '&#8451;',
+    'evap': 'mm/month',
+    'precip': 'mm/month',
+    'runoff': 'mm/month',
+    'soil': 'mm/month'
+}

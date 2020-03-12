@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.db import connections
 from django.contrib.gis.geos import GEOSGeometry
 
+
 class Hydrostn30Subbasin(models.Model):
     id = models.IntegerField(primary_key=True)
     record_name = models.CharField(max_length=12, blank=True, null=True)
@@ -25,7 +26,7 @@ class Hydrostn30Subbasin(models.Model):
     stn_catchment_area = models.FloatField(blank=True, null=True)
     stn_interstation_area = models.FloatField(blank=True, null=True)
     next_station = models.IntegerField(blank=True, null=True)
-    geom = models.GeometryField(srid=0, blank=True, null=True)
+    geom = models.GeometryField(srid=4326, blank=True, null=True)
 
     class Meta:
         managed = False  # Created from a view. Don't remove.
@@ -36,7 +37,6 @@ class Hydrostn30Subbasin(models.Model):
     def get_catchment(self):
         """Return upstream catchment as geojson"""
         with connections['argentina_01min'].cursor() as cursor:
-
             cursor.callproc('get_catchment', (self.id,))
 
             # return from db is in hexadecimal representation
@@ -45,6 +45,7 @@ class Hydrostn30Subbasin(models.Model):
             # convert to polygon
             polygon = GEOSGeometry(hex_wkb)
             return polygon.geojson
+
 
 class Hydrostn30Streamline(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -58,6 +59,7 @@ class Hydrostn30Streamline(models.Model):
         managed = False  # Created from a view. Don't remove.
         db_table = 'hydrostn30_streamline'
         abstract = True
+
 
 class CatchmentBasins(models.Model):
     sample_id = models.IntegerField(primary_key=True)
@@ -153,6 +155,7 @@ class ConfluenceDischargeMonthly(models.Model):
         managed = False
         db_table = 'confluence_discharge_monthly'
         abstract = True
+
 
 class SubbasinAirTemperatureMonthly(models.Model):
     subbasin_id = models.IntegerField(blank=True, null=True)
