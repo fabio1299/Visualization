@@ -1,50 +1,13 @@
 from django.shortcuts import render
 from django.views import View
+from django.http import HttpResponse
+from django.shortcuts import redirect
 
-from .models import ArgentinaHydrostn30Subbasin, ArgentinaHydrostn30Streamline, \
-    ArgentinaCatchmentStatsEvapotranspiration, \
-    ArgentinaCatchmentStatsRunoff, ArgentinaCatchmentStatsPrecipitation, ArgentinaCatchmentStatsSoilMoisture, \
-    ArgentinaCatchmentBasins, \
-    ArgentinaCatchmentStatsAirTemperature, ArgentinaSubbasinAirTemperatureMonthly, \
-    ArgentinaSubbasinEvapotranspirationMonthly, \
-    ArgentinaSubbasinPrecipitationMonthly, ArgentinaSubbasinRunoffMonthly, ArgentinaSubbasinSoilMoistureMonthly, \
-    ArgentinaConfluenceDischargeMonthly
-
-from .models import PeruHydrostn30Subbasin, PeruHydrostn30Streamline, PeruCatchmentStatsEvapotranspiration, \
-    PeruCatchmentStatsRunoff, PeruCatchmentStatsPrecipitation, PeruCatchmentStatsSoilMoisture, PeruCatchmentBasins, \
-    PeruCatchmentStatsAirTemperature, PeruSubbasinAirTemperatureMonthly, PeruSubbasinEvapotranspirationMonthly, \
-    PeruSubbasinPrecipitationMonthly, PeruSubbasinRunoffMonthly, PeruSubbasinSoilMoistureMonthly, \
-    PeruConfluenceDischargeMonthly
+# All models & dictionaries mapping country to models
+from .models import *
 
 from . import geometry, db_routines
 from .tasks import plot_queryset
-
-SUBBASIN = {'argentina': ArgentinaHydrostn30Subbasin, 'peru': PeruHydrostn30Subbasin}
-STREAMLINE = {'argentina': ArgentinaHydrostn30Streamline, 'peru': PeruHydrostn30Streamline}
-CATCHMENT_BASINS = {'argentina': ArgentinaCatchmentBasins, 'peru': PeruCatchmentBasins}
-DISCHARGE = {'argentina': ArgentinaConfluenceDischargeMonthly, 'peru': PeruConfluenceDischargeMonthly}
-CATCHMENT_STATS_EVAP = {'argentina': ArgentinaCatchmentStatsEvapotranspiration,
-                        'peru': PeruCatchmentStatsEvapotranspiration}
-CATCHMENT_STATS_RUNOFF = {'argentina': ArgentinaCatchmentStatsRunoff, 'peru': PeruCatchmentStatsRunoff}
-CATCHMENT_STATS_PRECIP = {'argentina': ArgentinaCatchmentStatsPrecipitation, 'peru': PeruCatchmentStatsPrecipitation}
-CATCHMENT_STATS_SOIL = {'argentina': ArgentinaCatchmentStatsSoilMoisture, 'peru': PeruCatchmentStatsSoilMoisture}
-CATCHMENT_STATS_AIR = {'argentina': ArgentinaCatchmentStatsAirTemperature, 'peru': PeruCatchmentStatsAirTemperature}
-SUBBASIN_STATS_EVAP = {'argentina': ArgentinaSubbasinEvapotranspirationMonthly,
-                       'peru': PeruSubbasinEvapotranspirationMonthly}
-SUBBASIN_STATS_RUNOFF = {'argentina': ArgentinaSubbasinRunoffMonthly, 'peru': PeruSubbasinRunoffMonthly}
-SUBBASIN_STATS_PRECIP = {'argentina': ArgentinaSubbasinPrecipitationMonthly, 'peru': PeruSubbasinPrecipitationMonthly}
-SUBBASIN_STATS_SOIL = {'argentina': ArgentinaSubbasinSoilMoistureMonthly, 'peru': PeruSubbasinSoilMoistureMonthly}
-SUBBASIN_STATS_AIR = {'argentina': ArgentinaSubbasinAirTemperatureMonthly, 'peru': PeruSubbasinAirTemperatureMonthly}
-
-UNITS = {
-    'discharge': 'm<sup>3</sup>/s',
-    'temp': '&#8451;',
-    'evap': 'mm/month',
-    'precip': 'mm/month',
-    'runoff': 'mm/month',
-    'soil': 'mm/month'
-}
-
 
 class HomeView(View):
     template_name = 'home.html'
@@ -123,13 +86,8 @@ class HomeView(View):
         return render(request, self.template_name, context=context)
 
 
-from django.http import HttpResponse
-from .db_routines import get_container_geometry
-from django.shortcuts import redirect
-
-
 def StationRedirect(request, country=None, lat=None, lon=None):
-    subbasin_id = get_container_geometry(float(lon), float(lat), SUBBASIN[country])
+    subbasin_id = db_routines.get_container_geometry(float(lon), float(lat), SUBBASIN[country])
     if not subbasin_id:
         return (HttpResponse('ERROR: lat={},lon={} not found in {}'.format(lat, lon, country)))
     else:
