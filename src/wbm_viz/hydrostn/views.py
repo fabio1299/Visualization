@@ -16,11 +16,6 @@ class HomeView(View):
     template_name = 'home.html'
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
 
-<<<<<<< Updated upstream
-        # Map Polygons
-=======
-        # Map
->>>>>>> Stashed changes
         subbasin_count = SUBBASIN[country].objects.count()
         subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
         catch_cache = CATCHMENT_BASINS[country].objects.filter(sample_id=subbasin_id).first()
