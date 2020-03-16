@@ -14,14 +14,18 @@ class HomeView(View):
     """Main View displaying map + plots for a particular country-basin"""
 
     template_name = 'home.html'
-
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
 
+<<<<<<< Updated upstream
         # Map Polygons
+=======
+        # Map
+>>>>>>> Stashed changes
         subbasin_count = SUBBASIN[country].objects.count()
         subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
         catch_cache = CATCHMENT_BASINS[country].objects.filter(sample_id=subbasin_id).first()
-        stream = STREAMLINE[country].objects.filter(id__in=catch_cache.basins)
+        streamlines_subbasin = STREAMLINE[country].objects.filter(id=subbasin_id).first()
+        streamlines_catchment = STREAMLINE[country].objects.filter(id__in=catch_cache.basins)
 
         if catch_cache.catchment == None:  # Geometry not cached in db
 
@@ -30,7 +34,7 @@ class HomeView(View):
 
             # collect all geom
             catch_collection = geometry.get_geometrycollection(catch_table)
-            stream_collection = geometry.get_geometrycollection(stream.values())
+            stream_collection = geometry.get_geometrycollection(streamlines_catchment.values())
 
             # union all geom
             catch_geom = catch_collection.unary_union

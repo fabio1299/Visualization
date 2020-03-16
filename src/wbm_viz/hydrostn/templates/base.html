@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>{% block title %}Water Based Model Visualization{% endblock %}</title>
+    <title>{% block title %}Water Balance Model Visualization{% endblock %}</title>
 
     {% load leaflet_tags %}
     {% leaflet_js %}
@@ -27,11 +27,20 @@
 
     <!-- Sidebar -->
     <aside class="bg-light border-right sidebar col-lg-2" id="sidebar-wrapper">
-      <div class="sidebar-heading">Water Based Model Visualization</div>
+      <div class="h4">Water Balance Model Visualization</div>
+        <hr>
+        <h5>Countries</h5>
       <div class="list-group list-group-flush">
           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 1 %}">Argentina</a>
            <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'peru' 1 %}">Peru</a>
       </div>
+        <h5>Controls</h5>
+        <div>
+            <button class="btn btn-primary btn-block" id="next-button">Next Upstream Subbasin</button>
+            <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
+            <button class="btn btn-info btn-block" onclick="window.history.back()">Back</button>
+
+        </div>
     </aside>
     <!-- /#sidebar-wrapper -->
 
