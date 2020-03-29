@@ -55,6 +55,17 @@ INSTALLED_APPS = [
     'celery_progress'
 ]
 
+# https://pypi.org/project/django-leaflet
+LEAFLET_CONFIG = {
+    'PLUGINS': {
+        'leaflet-pip': {
+            #https://github.com/mapbox/leaflet-pip : Point in Polygon functionality
+            'js': 'https://unpkg.com/@mapbox/leaflet-pip@1.1.0/leaflet-pip.js',
+            'auto-include': True,
+        },
+    },
+}
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
