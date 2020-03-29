@@ -1,5 +1,21 @@
 from .models_abstract import *
 
+class GlobalCountries(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)
+    recordname = models.CharField(db_column='RecordName', max_length=15, blank=True, null=True)
+    gridvalue = models.IntegerField(db_column='GridValue', blank=True, null=True)
+    gridarea = models.FloatField(db_column='GridArea', blank=True, null=True)
+    gridpercent = models.FloatField(db_column='GridPercent', blank=True, null=True)
+    adm0_code = models.IntegerField(blank=True, null=True)
+    adm0_name = models.CharField(max_length=64, blank=True, null=True)
+    geom = models.GeometryField(srid=0, blank=True, null=True)
+    scolor = models.IntegerField(db_column='SColor', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'global_countries'
+
+    country = 'argentina'# Arbitrarily chosen for convenience
 
 # Argentina
 class ArgentinaHydrostn30Subbasin(Hydrostn30Subbasin):

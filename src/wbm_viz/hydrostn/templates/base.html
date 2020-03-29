@@ -28,16 +28,11 @@
         <hr>
         <h5>Countries</h5>
       <div class="list-group list-group-flush">
-          <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 1 %}">Argentina</a>
-           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'peru' 1 %}">Peru</a>
+          <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 0 %}">Argentina</a>
+           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'peru' 0 %}">Peru</a>
       </div>
-        <h5>Controls</h5>
-        <div>
-            <button class="btn btn-primary btn-block" id="next-button">Next Downstream Subbasin</button>
-            <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
-            <button class="btn btn-info btn-block" onclick="window.history.back()">Back</button>
-
-        </div>
+        {% block sidebar %}
+        {% endblock %}
     </aside>
     <!-- /#sidebar-wrapper -->
 

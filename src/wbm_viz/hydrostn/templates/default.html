@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+
+{% block style %}
+    <style>
+        #country_map {
+        height: 800px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+        <div class="row">
+
+            <div class="map col-lg-12 " id="country_map">
+                {% leaflet_map "country_map" callback="country_map_init" %}
+            </div>
+
+        </div>
+{% endblock %}
+
+{% block script %}
+
+
+
+<script type="text/javascript">
+    function country_style(feature){
+        return {
+            color: '#FFFF00',
+            fill: false,
+            weight: 2,
+        }
+    }
+
+    function country_map_init(map, options){
+        const country = L.geoJSON({{ country_geom.geojson |safe }}, {style: country_style});
+        country.addTo(map)
+        {# Restrict bounds to current country #}
+        map.setMaxBounds(country.getBounds());
+        map.fitBounds(country.getBounds());
+
+        function map_redirect(e) {
+                let ptstr = e.latlng.toString()
+                let lat = e.latlng.lat
+                let lon = e.latlng.lng
+                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
+                url = url.replace('1234', lat)
+                url = url.replace('5678', lon)
+                return url
+            }
+
+            var popup = L.popup();
+
+            function onMapClick(e) {
+                let in_country = leafletPip.pointInLayer(e.latlng, country, [true]);
+
+                if (in_country.length > 0){
+                    popup
+                    .setLatLng(e.latlng)
+                    .setContent(map_redirect(e))
+                    .openOn(map);
+                }
+            }
+
+            map.on('click', onMapClick);
+    }
+</script>
+{% endblock %}

@@ -15,11 +15,16 @@
     </style>
 {% endblock %}
 
+{% block sidebar %}
+        <h5>Controls</h5>
+        <div>
+            <button class="btn btn-primary btn-block" id="next-button">Next Downstream Subbasin</button>
+            <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
+            <button class="btn btn-info btn-block" onclick="window.history.back()">Back</button>
+        </div>
+{% endblock %}
+
 {% block content %}
-
-    <div class="row justify-content-center">
-
-    </div>
 
     <div class="row">
 
@@ -279,6 +284,7 @@
 
 {% endblock %}
 
+
 {% block script %}
 
     {#  Background Loading #}
@@ -327,6 +333,9 @@
             const streamlines = L.geoJSON({{ stream_geom.geojson |safe }});
             const country = L.geoJSON({{ country_geom.geojson |safe }}, {style: country_style});
 
+            {# Restrict bounds to current country #}
+            map.setMaxBounds(country.getBounds());
+
             {#Layers#}
             let basin = L.layerGroup([subbasin_polygon,]);
             let catchment = L.layerGroup([subbasin_catchment,streamlines]);
@@ -337,7 +346,6 @@
                 "Country":country.addTo(map)
             };
             L.control.layers(null, overlay_polygons).addTo(map);
-            map.fitWorld();
             map.fitBounds(subbasin_catchment.getBounds());
 
             function map_redirect(e) {
