@@ -17,13 +17,13 @@ class HomeView(View):
     default_template = 'default.html'
 
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
-
+        country = country.lower()
         country_geom = GlobalCountries.objects.filter(adm0_name__iexact=country).first().geom
         subbasin_count = SUBBASIN[country].objects.count()
 
         # Default Country View
         if subbasin_id == '0':
-            context = {'default_view': True, 'country': country, 'country_geom': country_geom, 'subbasin_count':subbasin_count}
+            context = {'default_view': True, 'country': country.capitalize(), 'country_geom': country_geom, 'subbasin_count':subbasin_count}
             return render(request, self.default_template, context=context)
         else:
             subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
@@ -87,7 +87,7 @@ class HomeView(View):
             soil_catch = trigger_plot(CATCHMENT_STATS_SOIL[country], title="Catchment Mean Soil Moisture",
                                       units=UNITS['soil'])
 
-            context = {'default_view': False, 'country': country, 'country_geom':country_geom, 'subbasin_count': subbasin_count,
+            context = {'default_view': False, 'country': country.capitalize(), 'country_geom':country_geom, 'subbasin_count': subbasin_count,
                        'subbasin_id': subbasin_id, 'subbasin': subbasin, 'streamlines_subbasin': streamlines_subbasin,
                        'catch_geom': catch_geom,
                        'stream_geom': stream_geom, 'evap_catch_task_id': evap_catch.task_id,
@@ -102,7 +102,7 @@ class HomeView(View):
 
 def StationRedirect(request, country=None, lat=None, lon=None):
     """Redirect view taking a lon/lat point at redirecting to correct HomeView"""
-
+    country = country.lower()
     subbasin_id = db_routines.get_container_geometry(float(lon), float(lat), SUBBASIN[country])
     if not subbasin_id:
         return (HttpResponse('ERROR: lat={},lon={} not found in {}'.format(lat, lon, country)))

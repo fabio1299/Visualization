@@ -20,7 +20,7 @@
         background: rgba(255,255,255,0.8);
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 5px;
-     }
+        }
         .info h4 {
             margin: 0 0 5px;
             color: #777;
@@ -62,11 +62,7 @@
                 </tr>
                 <tr>
                     <td><img src="{% static 'img/catchment_square.png' %}" height="90" width="100"></td>
-                    <td class="align-middle">Upstream</td>
-                </tr>
-                <tr>
-                    <th scope="row">Basin Name</th>
-                    <td>{{ subbasin.basin_name }}</td>
+                    <td class="align-middle">Upstream <br> (Catchment)</td>
                 </tr>
                 <tr>
                     <th scope="row">Station ID</th>
@@ -375,14 +371,14 @@
                 this.update();
                 return this._div;};
             info.update = function (props) {
-                this._div.innerHTML = '<h4>{{ country }} {{ subbasin_id }}</h4>' + '<br>' +  'Click to navigate <br> within country'};
+                this._div.innerHTML = '<h4>{{ country }} {{ subbasin_id }}</h4>'};
             info.addTo(map);
 
             function map_redirect(e) {
                 let ptstr = e.latlng.toString();
                 let lat = e.latlng.lat;
                 let lon = e.latlng.lng;
-                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>';
+                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">Go to ' + ptstr + '</a>';
                 url = url.replace('1234', lat);
                 url = url.replace('5678', lon);
                 return url

@@ -11,6 +11,19 @@
         #country_map {
         height: 800px;
         }
+
+        .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
     </style>
 {% endblock %}
 
@@ -60,11 +73,21 @@
                 let ptstr = e.latlng.toString()
                 let lat = e.latlng.lat
                 let lon = e.latlng.lng
-                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
+                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">Go to ' + ptstr + '<br></a>'
                 url = url.replace('1234', lat)
                 url = url.replace('5678', lon)
                 return url
             }
+
+        let info = L.control({position: 'bottomleft'});
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;};
+        info.update = function (props) {
+            this._div.innerHTML =  'Click to navigate <br> within yellow outline <br> of {{ country }}'};
+        info.addTo(map);
+
 
             var popup = L.popup();
 
