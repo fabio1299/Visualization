@@ -26,13 +26,13 @@
     <aside class="bg-light border-right sidebar col-lg-2" id="sidebar-wrapper">
       <div class="h4">Water Balance Model Visualization</div>
         <hr>
-        <h5>Countries</h5>
+        <h6>Countries</h6>
       <div class="list-group list-group-flush">
-          <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 0 %}">Argentina</a>
-           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'peru' 0 %}">Peru</a>
+          <a class="list-group-item list-group-item-primary list-group-item-action bg-light" href="{% url 'home' 'argentina' 0 %}">Argentina</a>
+           <a class="list-group-item list-group-item-primary list-group-item-action bg-light" href="{% url 'home' 'peru' 0 %}">Peru</a>
       </div>
 
-        <h5>Controls</h5>
+        <h6>Controls</h6>
 
         {% block controls %}
         {% endblock %}

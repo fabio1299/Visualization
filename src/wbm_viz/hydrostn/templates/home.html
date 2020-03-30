@@ -12,14 +12,36 @@
         .map {
         height: 800px;
         }
+
+        .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+     }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
     </style>
 {% endblock %}
 
 {% block controls %}
         <div>
-            <button class="btn btn-primary btn-block" id="next-button">Next Downstream Subbasin</button>
-            <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
-            <button class="btn btn-info btn-block" onclick="window.history.back()">Back</button>
+            <div class="list-group list-group-flush">
+                <button class="list-group-item list-group-item-warning list-group-item-action bg-light"  id="next-button">Next Downstream Subbasin</button>
+                <button class="list-group-item list-group-item-warning list-group-item-action bg-light" id="random-button">Random Subbasin</button>
+                <button class="list-group-item list-group-item-warning list-group-item-action bg-light" onclick="window.history.back()">Back</button>
+            </div>
+
+            <h6>Zoom</h6>
+            <div class="list-group list-group-flush">
+                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-basin">Zoom to Reference Basin</button>
+                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-catchment">Zoom To Catchment</button>
+                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-country">Zoom To {{ country }}</button>
+            </div>
         </div>
 {% endblock %}
 
@@ -334,9 +356,6 @@
             const streamlines = L.geoJSON({{ stream_geom.geojson |safe }});
             const country = L.geoJSON({{ country_geom.geojson |safe }}, {style: country_style});
 
-            {# Restrict bounds to current country #}
-            map.setMaxBounds(country.getBounds());
-
             {#Layers#}
             let basin = L.featureGroup([subbasin_polygon,subbasin_streamlines]);
             let catchment = L.featureGroup([subbasin_catchment,streamlines]);
@@ -347,16 +366,25 @@
                 "Catchment Streamlines": streamlines.addTo(map),
                 "Country":country.addTo(map)
             };
-            L.control.layers(null, overlay_polygons).addTo(map);
+            L.control.layers(null, overlay_polygons).setPosition('bottomright').addTo(map);
             map.fitBounds(subbasin_catchment.getBounds());
 
+            let info = L.control({position: 'topright'});
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                this.update();
+                return this._div;};
+            info.update = function (props) {
+                this._div.innerHTML = '<h4>{{ country }} {{ subbasin_id }}</h4>' + '<br>' +  'Click to navigate <br> within country'};
+            info.addTo(map);
+
             function map_redirect(e) {
-                let ptstr = e.latlng.toString()
-                let lat = e.latlng.lat
-                let lon = e.latlng.lng
-                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>'
-                url = url.replace('1234', lat)
-                url = url.replace('5678', lon)
+                let ptstr = e.latlng.toString();
+                let lat = e.latlng.lat;
+                let lon = e.latlng.lng;
+                let url = '<a href="{% url 'station_redirect' country 1234 5678 %}">GO TO BASIN at ' + ptstr + '</a>';
+                url = url.replace('1234', lat);
+                url = url.replace('5678', lon);
                 return url
             }
 
@@ -374,8 +402,23 @@
             }
 
             map.on('click', onMapClick);
-            map.fitBounds(catchment.getBounds());
-            map.fitBounds(basin.getBounds());
+
+            function zoomBasin(){
+                map.flyToBounds(basin.getBounds(),{duration:0.4});
+            }
+
+            function zoomCatchment(){
+                map.flyToBounds(catchment.getBounds(),{duration:0.2});
+            }
+
+            function zoomCountry() {
+                map.flyToBounds(country.getBounds(),{duration:0.2});
+            }
+
+            document.getElementById('zoom-basin').onclick= zoomBasin;
+            document.getElementById('zoom-catchment').onclick=zoomCatchment;
+            document.getElementById('zoom-country').onclick=zoomCountry;
+
         }
 
     </script>
