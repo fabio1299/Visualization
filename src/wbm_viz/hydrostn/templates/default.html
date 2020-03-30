@@ -14,6 +14,10 @@
     </style>
 {% endblock %}
 
+{% block controls %}
+    <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
+{% endblock %}
+
 {% block content %}
         <div class="row">
 
@@ -29,6 +33,12 @@
 
 
 <script type="text/javascript">
+
+    document.getElementById("random-button").onclick = function () {
+        const random_num = Math.floor(Math.random() * Math.floor({{ subbasin_count }}));
+
+        location.href = `../${random_num}`
+    }
     function country_style(feature){
         return {
             color: '#FFFF00',

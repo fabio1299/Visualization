@@ -15,8 +15,7 @@
     </style>
 {% endblock %}
 
-{% block sidebar %}
-        <h5>Controls</h5>
+{% block controls %}
         <div>
             <button class="btn btn-primary btn-block" id="next-button">Next Downstream Subbasin</button>
             <button class="btn btn-secondary btn-block" id="random-button">Random Subbasin</button>
@@ -313,7 +312,8 @@
                 color: '#ff3300',
                 weight: 2,
                 opacity: 0.8,
-                fill: false,
+                fill: true,
+                fillColor:'#33BBFF',
                 dashArray: 5,
             }
         }
@@ -329,6 +329,7 @@
         function subbasin_map_init(map, options) {
 
             const subbasin_polygon = L.geoJSON({{ subbasin.geom.geojson|safe }}, {style: subbasin_style});
+            const subbasin_streamlines = L.geoJSON({{ streamlines_subbasin.geom.geojson|safe }});
             const subbasin_catchment = L.geoJSON({{ catch_geom.geojson |safe }}, {style: catchment_style});
             const streamlines = L.geoJSON({{ stream_geom.geojson |safe }});
             const country = L.geoJSON({{ country_geom.geojson |safe }}, {style: country_style});
@@ -337,12 +338,13 @@
             map.setMaxBounds(country.getBounds());
 
             {#Layers#}
-            let basin = L.layerGroup([subbasin_polygon,]);
-            let catchment = L.layerGroup([subbasin_catchment,streamlines]);
-            let country_layer = L.layerGroup([country,]);
+            let basin = L.featureGroup([subbasin_polygon,subbasin_streamlines]);
+            let catchment = L.featureGroup([subbasin_catchment,streamlines]);
             let overlay_polygons = {
-                "Reference Basin": basin.addTo(map),
-                "Catchment": catchment.addTo(map),
+                "Reference Basin Polygon": subbasin_polygon.addTo(map),
+                "Reference Basin Streamlines":subbasin_streamlines.addTo(map),
+                "Catchment Polygon": subbasin_catchment.addTo(map),
+                "Catchment Streamlines": streamlines.addTo(map),
                 "Country":country.addTo(map)
             };
             L.control.layers(null, overlay_polygons).addTo(map);
@@ -372,6 +374,8 @@
             }
 
             map.on('click', onMapClick);
+            map.fitBounds(catchment.getBounds());
+            map.fitBounds(basin.getBounds());
         }
 
     </script>

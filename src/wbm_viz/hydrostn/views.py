@@ -19,13 +19,13 @@ class HomeView(View):
     def get(self, request, subbasin_id=1, country='argentina', *args, **kwargs):
 
         country_geom = GlobalCountries.objects.filter(adm0_name__iexact=country).first().geom
+        subbasin_count = SUBBASIN[country].objects.count()
 
         # Default Country View
         if subbasin_id == '0':
-            context = {'default_view': True, 'country': country, 'country_geom': country_geom}
+            context = {'default_view': True, 'country': country, 'country_geom': country_geom, 'subbasin_count':subbasin_count}
             return render(request, self.default_template, context=context)
         else:
-            subbasin_count = SUBBASIN[country].objects.count()
             subbasin = SUBBASIN[country].objects.filter(id=subbasin_id).first()
             catch_cache = CATCHMENT_BASINS[country].objects.filter(sample_id=subbasin_id).first()
             streamlines_subbasin = STREAMLINE[country].objects.filter(id=subbasin_id).first()
@@ -88,7 +88,8 @@ class HomeView(View):
                                       units=UNITS['soil'])
 
             context = {'default_view': False, 'country': country, 'country_geom':country_geom, 'subbasin_count': subbasin_count,
-                       'subbasin_id': subbasin_id, 'subbasin': subbasin, 'catch_geom': catch_geom,
+                       'subbasin_id': subbasin_id, 'subbasin': subbasin, 'streamlines_subbasin': streamlines_subbasin,
+                       'catch_geom': catch_geom,
                        'stream_geom': stream_geom, 'evap_catch_task_id': evap_catch.task_id,
                        'air_catch_task_id': air_catch.task_id, 'precip_catch_task_id': precip_catch.task_id,
                        'runoff_catch_task_id': runoff_catch.task_id, 'soil_catch_task_id': soil_catch.task_id,

@@ -31,7 +31,10 @@
           <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'argentina' 0 %}">Argentina</a>
            <a class="list-group-item list-group-item-action bg-light" href="{% url 'home' 'peru' 0 %}">Peru</a>
       </div>
-        {% block sidebar %}
+
+        <h5>Controls</h5>
+
+        {% block controls %}
         {% endblock %}
     </aside>
     <!-- /#sidebar-wrapper -->
