@@ -22,8 +22,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('hydrostn.urls')),
+    path('news/',include('news.urls')),
     re_path(r'^celery-progress/', include('celery_progress.urls')),  # the endpoint is configurable
-
 ]
 
 

@@ -31,15 +31,15 @@
 {% block controls %}
         <div>
             <div class="list-group list-group-flush">
-                <button class="list-group-item list-group-item-warning list-group-item-action bg-light"  id="next-button">Next Downstream Subbasin</button>
+                <button class="list-group-item list-group-item-warning list-group-item-action bg-light"  id="next-button">Next Subbasin (Downstream)</button>
                 <button class="list-group-item list-group-item-warning list-group-item-action bg-light" id="random-button">Random Subbasin</button>
                 <button class="list-group-item list-group-item-warning list-group-item-action bg-light" onclick="window.history.back()">Back</button>
             </div>
 
             <h6>Zoom</h6>
             <div class="list-group list-group-flush">
-                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-basin">Zoom to Reference Basin</button>
-                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-catchment">Zoom To Catchment</button>
+                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-basin">Zoom to Subbasin</button>
+                <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-catchment">Zoom To Subcatchment</button>
                 <button class="list-group-item list-group-item-success list-group-item-action bg-light" id="zoom-country">Zoom To {{ country }}</button>
             </div>
         </div>
@@ -58,18 +58,18 @@
                 <tbody>
                 <tr>
                     <td><img src="{% static 'img/reference_basin_square.png' %}" height="90" width="100"></td>
-                    <td class="align-middle">Reference Basin</td>
+                    <td class="align-middle">Subbasin</td>
                 </tr>
                 <tr>
                     <td><img src="{% static 'img/catchment_square.png' %}" height="90" width="100"></td>
-                    <td class="align-middle">Upstream <br> (Catchment)</td>
+                    <td class="align-middle">Subcatchment <br> (Upstream)</td>
                 </tr>
                 <tr>
                     <th scope="row">Station ID</th>
                     <td>{{ subbasin.id }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Next Station</th>
+                    <th scope="row">Next Station ID</th>
                     <td>{{ subbasin.next_station }}</td>
                 </tr>
                 <tr>
@@ -77,28 +77,24 @@
                     <td>{{ subbasin.stream_order }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Number of Cells</th>
+                    <th scope="row">Subbasin # of Cells</th>
                     <td>{{ subbasin.number_of_cells }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Grid Area</th>
-                    <td>{{ subbasin.grid_area }}</td>
+                    <th scope="row">Subbasin Perimeter</th>
+                    <td>{{ subbasin.perimeter|floatformat:2 }} km</td>
                 </tr>
                 <tr>
-                    <th scope="row">Perimeter</th>
-                    <td>{{ subbasin.perimeter }}</td>
+                    <th scope="row">Subbasin Mainstem Length</th>
+                    <td>{{ subbasin.stn_mainstem_length|floatformat:2 }} km</td>
                 </tr>
                 <tr>
-                    <th scope="row">Mainstem Length</th>
-                    <td>{{ subbasin.stn_mainstem_length }}</td>
+                    <th scope="row">Subbasin Grid Area</th>
+                    <td>{{ subbasin.grid_area|floatformat:2 }} km<sup>2</sup></td>
                 </tr>
                 <tr>
-                    <th scope="row">Catchment Area</th>
-                    <td>{{ subbasin.stn_catchment_area }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Interstation Area</th>
-                    <td>{{ subbasin.stn_interstation_area }}</td>
+                    <th scope="row">Subcatchment Area</th>
+                    <td>{{ subbasin.stn_catchment_area|floatformat:2 }} km<sup>2</sup></td>
                 </tr>
                 </tbody>
             </table>
@@ -428,7 +424,7 @@
         {
             let next_button = document.getElementById("next-button");
             next_button.disabled = true;
-            next_button.textContent = "Next Upstream Subbasin (None)"
+            next_button.textContent = "Next Subbasin (None -- Terminal)"
 
         }
         document.getElementById("next-button").onclick = function () {

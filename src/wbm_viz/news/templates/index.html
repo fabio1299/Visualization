@@ -1,0 +1,198 @@
+{% extends "base_temp.html" %}
+{% load leaflet_tags %}
+{% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+{% load static %}
+
+{% block head %}
+<head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <style>
+        #news_map {
+            height: 800px;
+            width: 100%;
+        }
+
+        #plotdiv{
+            height: 30%;
+            width: 100%;
+        }
+    </style>
+</head>
+{% endblock %}
+
+{% block content %}
+    <div id="map">
+        {% leaflet_map "news_map" "news_map_init" %}
+    </div>
+
+    {#    Data Scope Form   #}
+    <form id='data-scope-form' method='POST' action="{{ request.scheme }}://{{ request.get_host }}{% url 'data-scope-update' %}" >
+        {% csrf_token %}
+        {{ data_scope_form }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="plotdiv">
+        <div class='progress-wrapper'>
+            <div id='avg_plot-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">
+             </div>
+        </div>
+        <div id="avg_plot-message">Generating Plot...</div>
+         <div id="avg_plot" class="chart"></div>
+{##}
+{#        <div class="input-group mb-3">#}
+{#            <label >Year (1975-2060)</label>#}
+{#              <input type="text" placeholder="1980" aria-label="Username" aria-describedby="basic-addon1">#}
+{#            <label >Day of year (0-365)</label>#}
+{#              <input type="text"  placeholder="150" aria-label="Username" aria-describedby="basic-addon1">#}
+{#        </div>#}
+
+        <form id='distance-plot-form' method='POST' action="{{ request.scheme }}://{{ request.get_host }}{% url 'distance-plot-update' %}" >
+            {% csrf_token %}
+            {% bootstrap_form distance_plot_form %}
+            <input type="submit" value="Submit">
+
+        </form>
+
+        <div class='progress-wrapper'>
+            <div id='distance_plot-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">
+             </div>
+        </div>
+        <div id="distance_plot-message">Generating Plot...</div>
+         <div id="distance_plot" class="chart"></div>
+
+    </div>
+
+    {% endblock %}
+
+{% block javascript %}
+{#  Background Loading #}
+
+<script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+
+<script>
+        $(document).ready(function(){
+            var $dataScopeForm = $('#data-scope-form')
+            var $distancePlotForm = $('#distance-plot-form')
+
+            {# include network_id in post request #}
+            $dataScopeForm.append('<input id=ds_network_id type="hidden" name="network_id" value="{{ network_id }}" /> ');
+            $distancePlotForm.append('<input id=dp_network_id type="hidden" name="network_id" value="{{ network_id }}" /> ');
+
+            $dataScopeForm.submit(function(event){
+                event.preventDefault()
+
+                var $formData = $(this).serialize()
+                var $data_scope_url = $dataScopeForm.attr('action')
+                $.ajax({
+                    method: "POST",
+                    url: $data_scope_url,
+                    data: $formData,
+                    success: dataScopeFormHandleSucess,
+                    error: handleFormError,
+                })
+            })
+
+
+
+            $distancePlotForm.submit(function(event){
+                event.preventDefault()
+
+                var $formData = $(this).serialize()
+                var $data_scope_url = $distancePlotForm.attr('action')
+                $.ajax({
+                    method: "POST",
+                    url: $data_scope_url,
+                    data: $formData,
+                    success: distancePlotFormHandleSuccess,
+                    error: handleFormError,
+                })
+            })
+
+
+            function handleFormError(data, textStatus, errorThrown){
+                console.log(data,textStatus,errorThrown)
+            }
+
+            function dataScopeFormHandleSucess(data){
+                plot1_update = "/celery-progress/" + data.avg_plot_task_id
+                plot_async(plot1_update,
+                    'avg_plot', 'avg_plot-bar', 'avg_plot-message');
+
+                plot2_update = "/celery-progress/" + data.distance_plot_task_id
+                plot_async(plot2_update,
+                    'distance_plot', 'distance_plot-bar', 'distance_plot-message');
+                }
+
+            function distancePlotFormHandleSuccess(data){
+                plot2_update = "/celery-progress/" + data.distance_plot_task_id
+                plot_async(plot2_update,
+                    'distance_plot', 'distance_plot-bar', 'distance_plot-message');
+                }
+
+        })
+
+</script>
+
+<script type="text/javascript">
+    var geojsonMarkerOptions = {
+        radius: 8,
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    function onEachFeature(feature, layer) {
+        if (feature.properties) {
+            let id = "ID : " + feature.properties.pk.toString() + "<br>"
+            let id_to = "ID_To: " + feature.properties.id_to.toString() + "<br>"
+            let dist2ocean = "Dist2Ocean: " + feature.properties.dist2ocean.toString()
+            layer.bindPopup(id + id_to + dist2ocean);
+        }
+    }
+    function news_map_init(map, options) {
+        let network = L.geoJSON({{ network_json|safe }}, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            },
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+
+        map.fitBounds(network.getBounds());
+    }
+
+     function customResult(resultElement, result) {
+            let graphs = JSON.parse(result);
+            Plotly.react(resultElement, graphs, {});
+        }
+
+    function onSuccessDefault(progressBarElement, progressBarMessageElement) {
+        {#progressBarElement.style.backgroundColor = '#76ce60';#}
+        progressBarMessageElement.innerHTML = "";
+    }
+
+    function plot_async(progressUrl, result_id, bar_id, bar_message) {
+            // vanilla JS version
+            CeleryProgressBar.initProgressBar(progressUrl, {
+                onResult: customResult,
+                onSuccess: onSuccessDefault,
+                resultElementId: result_id,
+                progressBarId: bar_id,
+                progressBarMessageId: bar_message,
+                pollInterval: 500
+            });
+        }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        plot_async("{% url 'celery_progress:task_status' avg_plot_task_id %}",
+            'avg_plot', 'avg_plot-bar', 'avg_plot-message');
+        plot_async("{% url 'celery_progress:task_status' distance_plot_task_id %}",
+            'distance_plot', 'distance_plot-bar', 'distance_plot-message');
+    });
+</script>
+{% endblock %}

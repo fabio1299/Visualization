@@ -6,6 +6,8 @@ class gd_admin_db:
     def db_for_read(self, model, **hints):
         if model._meta.app_label == 'wbm_viz':
             return 'default'
+        if model._meta.app_label == 'news':
+            return 'news'
         if model.country == 'argentina':
             return 'argentina_01min'
         if model.country == 'peru':

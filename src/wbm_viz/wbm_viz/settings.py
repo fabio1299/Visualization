@@ -50,10 +50,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'debug_toolbar',
-    'hydrostn.apps.hydrostnConfig',
     'leaflet',
-    'celery_progress'
+    'celery_progress',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
+    'hydrostn.apps.hydrostnConfig',
+    'news.apps.newsConfig'
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 # https://pypi.org/project/django-leaflet
 LEAFLET_CONFIG = {
@@ -157,7 +164,20 @@ DATABASES = {
             'DEPENDENCIES': [],
         }
     },
-
+    'news': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'news',
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        },
+        'HOST': os.environ.get('DB_HOST', None),
+        'PORT': 5435,
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'TEST': {
+            'DEPENDENCIES': [],
+        }
+    },
 }
 
 DATABASE_ROUTERS = ['wbm_viz.router.gd_admin_db', ]
