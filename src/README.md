@@ -32,3 +32,23 @@ unset DB_HOST
 unset DB_PORT
 unset DB_USER
 unset DB_PASSWORD
+```
+
+## Celery 
+https://docs.celeryproject.org/en/v4.4.6/getting-started/first-steps-with-celery.html
+
+The celery task queue is utilized to perform background tasks. See the `CELERY_` settings in the django `settings.py`
+file. 
+
+#### Starting the celery server
+```
+# From .../Visualization/src/wbm_viz
+celery -A wbm_viz worker -l info
+```
+
+## Django Cache
+Django's cacheing functionality is made use of for retrieving previously completed tasks from the celery task queue. 
+The task_id's are cached, and used to retrieve task results. Currently the default django local cache is used, 
+but a more robust implementation may need to be configured later.
+
+https://docs.djangoproject.com/en/3.0/topics/cache/
