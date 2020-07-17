@@ -36,6 +36,10 @@
         <input type="submit" value="Submit">
     </form>
 
+    <a id="download_csv_link" href="{% url 'download_csv' network_id '1975' %}">
+    <button>Download data</button>
+    </a>
+
     <div id="plotdiv">
         <div class='progress-wrapper'>
             <div id='avg_plot-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">
@@ -51,19 +55,28 @@
 {#              <input type="text"  placeholder="150" aria-label="Username" aria-describedby="basic-addon1">#}
 {#        </div>#}
 
-        <form id='distance-plot-form' method='POST' action="{{ request.scheme }}://{{ request.get_host }}{% url 'distance-plot-update' %}" >
-            {% csrf_token %}
-            {% bootstrap_form distance_plot_form %}
-            <input type="submit" value="Submit">
+{#        <form id='distance-plot-form' method='POST' action="{{ request.scheme }}://{{ request.get_host }}{% url 'distance-plot-update' %}" >#}
+{#            {% csrf_token %}#}
+{#            <div id="distance-plot-form-render">#}
+{#                            {{ distance_plot_form }}#}
+{#            </div>#}
+{#            <input type="submit" value="Submit">#}
+{##}
+{#        </form>#}
 
-        </form>
+{#        <div class='progress-wrapper'>#}
+{#            <div id='distance_plot-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">#}
+{#             </div>#}
+{#        </div>#}
+{#        <div id="distance_plot-message">Generating Plot...</div>#}
+{#         <div id="distance_plot" class="chart"></div>#}
 
-        <div class='progress-wrapper'>
-            <div id='distance_plot-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">
+            <div class='progress-wrapper'>
+            <div id='distance_plot_3d-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">
              </div>
         </div>
-        <div id="distance_plot-message">Generating Plot...</div>
-         <div id="distance_plot" class="chart"></div>
+        <div id="distance_plot_3d-message">Generating Plot...</div>
+         <div id="distance_plot_3d" class="chart"></div>
 
     </div>
 
@@ -123,9 +136,14 @@
                 plot_async(plot1_update,
                     'avg_plot', 'avg_plot-bar', 'avg_plot-message');
 
-                plot2_update = "/celery-progress/" + data.distance_plot_task_id
-                plot_async(plot2_update,
-                    'distance_plot', 'distance_plot-bar', 'distance_plot-message');
+                plot3_update = "/celery-progress/" + data.distance_plot_3d_task_id
+                plot_async(plot3_update,
+                    'distance_plot_3d', 'distance_plot_3d-bar', 'distance_plot_3d-message');
+
+                {#update download button#}
+                let download_year = $("#data_scope_year").val()
+                $("#download_csv_link").attr("href","/news/{{ network_id }}/" + download_year + "/download/")
+
                 }
 
             function distancePlotFormHandleSuccess(data){
@@ -191,8 +209,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         plot_async("{% url 'celery_progress:task_status' avg_plot_task_id %}",
             'avg_plot', 'avg_plot-bar', 'avg_plot-message');
-        plot_async("{% url 'celery_progress:task_status' distance_plot_task_id %}",
-            'distance_plot', 'distance_plot-bar', 'distance_plot-message');
+        plot_async("{% url 'celery_progress:task_status' distance_plot_3d_task_id %}",
+            'distance_plot_3d', 'distance_plot_3d-bar', 'distance_plot_3d-message');
     });
 </script>
 {% endblock %}

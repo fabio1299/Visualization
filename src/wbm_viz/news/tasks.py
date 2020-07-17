@@ -78,7 +78,6 @@ def avg_plot(self, df_json):
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json
 
-
 @shared_task(bind=True)
 def distance_plot(self,df_json, year, day):
     dt = datetime.strptime(str(year) + '-' + str(day),'%Y-%j')
@@ -105,6 +104,37 @@ def distance_plot(self,df_json, year, day):
             'autorange':'reversed'
         }
     )
+    plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return plot_json
+
+@shared_task(bind=True)
+def distance_plot_3d(self,df_json,year):
+    df = pd.read_json(df_json)
+    df[(df.year == year)].sort_values('dist2ocean', ascending=True)
+
+    layout = dict(
+        showlegend=False,
+        width=1000,
+        height=1000,
+        title="Watertemp Daily {} / Distance to Ocean".format(year),
+    )
+    fig = go.Figure(layout=layout)
+    line = dict(color='blue')
+
+    for name, group in df.groupby('dist2ocean'):
+        trace = go.Scatter3d(mode='lines')
+
+        trace.x = group['day']
+        trace.y = group['dist2ocean']
+        trace.z = group['watertemp']
+        # trace.line=line
+        fig.add_trace(trace)
+
+    fig.update_layout(scene=dict(
+        xaxis_title='Day of {}'.format(year),
+        yaxis_title='Distance to Ocean',
+        zaxis_title='Water Temperature C'),)
+
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return plot_json
 
